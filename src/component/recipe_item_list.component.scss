@@ -1,0 +1,11 @@
+.recipeList {
+  &__item {
+    width: 400px;
+    height: 200px;
+    background-color: rgb(238, 234, 234);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+  }
+}

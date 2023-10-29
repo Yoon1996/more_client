@@ -1,0 +1,41 @@
+//login.page.scss
+
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  &__content {
+    flex-shrink: 0;
+    margin-top: 25vh;
+  }
+
+  #login {
+    &__title {
+      font-size: 70px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    Input,
+    Button {
+      width: 500px;
+      height: 40px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    Button {
+      background-color: none;
+    }
+
+    &__form {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+  }
+}

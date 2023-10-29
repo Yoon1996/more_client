@@ -1,0 +1,107 @@
+.header {
+  border-bottom: 0.0625rem solid black;
+
+  &__info {
+    display: flex;
+    padding: 0.5rem 5rem;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: stretch;
+    flex-direction: row-reverse;
+    border-bottom: 1px solid var(--cool-gray-30, #c1c7cd);
+
+    &--group {
+      display: flex;
+    }
+
+    &--userName {
+      color: blue;
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    &--logout {
+      cursor: pointer;
+      margin-left: 20px;
+    }
+
+    &--login {
+      cursor: pointer;
+    }
+
+    &--sign {
+      cursor: pointer;
+      margin-left: 20px;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    padding: 24px 80px;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    align-self: stretch;
+
+    &--title {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      font-family: Roboto;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 110%;
+      cursor: pointer;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    padding: 8px 80px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    background: var(--cool-gray-10, #f2f4f8);
+
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex: 1 0 0;
+
+      li {
+        display: flex;
+        padding: 8px 16px;
+        align-items: center;
+        gap: 8px;
+        color: var(--cool-gray-90, #21272a);
+        cursor: pointer;
+
+        /* Other/Menu M */
+        font-family: Roboto;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 16px */
+        Button {
+          padding: 8px 16px;
+          align-items: center;
+          gap: 8px;
+          color: var(--cool-gray-90, #21272a);
+
+          /* Other/Menu M */
+          font-family: Roboto;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 100%; /* 16px */
+          border: none;
+        }
+      }
+    }
+  }
+}

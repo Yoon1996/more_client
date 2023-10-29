@@ -1,0 +1,17 @@
+.recipe_list {
+  &__wrap {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  &__filter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

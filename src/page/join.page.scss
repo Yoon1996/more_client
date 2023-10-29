@@ -1,0 +1,54 @@
+.join-page {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+
+  &__content {
+    margin-top: 100px;
+    width: 700px;
+
+    .join {
+      &__title {
+        font-size: 60px;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      &__form {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        .box {
+          width: 700px;
+          height: 100px;
+        }
+      }
+    }
+  }
+
+  Input,
+  Button {
+    width: 700px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  Button {
+    background-color: none;
+  }
+}
+
+.hint {
+  font-size: 12px;
+  margin-top: -6px;
+  color: red;
+  &__duplicated {
+  }
+
+  &__usable {
+    color: blue;
+  }
+}

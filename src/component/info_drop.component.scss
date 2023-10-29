@@ -1,0 +1,12 @@
+.infoDrop {
+  width: 130px;
+  height: 100px;
+  background-color: rgb(238, 234, 234);
+  position: absolute;
+  padding: 10px;
+
+  &__menu {
+    margin: 5px 0;
+    cursor: pointer;
+  }
+}
