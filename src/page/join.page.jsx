@@ -172,122 +172,137 @@ const JoinPage = () => {
   };
 
   return (
-    <div className="join-page">
-      <div className="join-page__content">
-        <div className="join">
-          <div className="join__title">회원가입</div>
-          <div className="join__form">
-            <div className="join__id box">
-              <div className="join__id_sub">아이디</div>
-              <Input
-                id="join__id"
-                type="text"
-                defaultValue={nickname}
-                onChange={(event) => {
-                  nicknameSubject.next(event.target.value);
-                }}
-                placeholder="아이디 입력해주세요."
-              ></Input>
-              <div className="hint">
-                {errors?.nickname?.require ? (
-                  <p>{errors?.nickname?.require}</p>
-                ) : (
-                  ""
-                )}
-                {errors?.nickname?.maxLength ? (
-                  <p>{errors?.nickname?.maxLength}</p>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="hint hint__duplicated">
-                {errors?.nickname?.duplicated ? (
-                  <p>{errors?.nickname?.duplicated}</p>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="hint hint__usable">
-                {errors?.nickname?.usable ? (
-                  <p>{errors?.nickname?.usable}</p>
-                ) : (
-                  ""
-                )}
-              </div>
+    <div className="join">
+      <div className="join__header">
+        <div className="join__header-right">
+          <div className="join__header-message">이미 계정이 있으신가요?</div>
+          <button
+            onClick={() => {
+              navigate("/login/member_login");
+            }}
+            className="join__header-bt"
+          >
+            로그인
+          </button>
+        </div>
+      </div>
+      <div className="join__content">
+        <div className="join__title">모두의 레시피에 오신 것을 환영합니다!</div>
+        <div className="join__form">
+          <div className="join__id join__box">
+            <div className="join__id_sub">사용할 아이디를 입력해주세요.</div>
+            <input
+              id="join__id"
+              type="text"
+              defaultValue={nickname}
+              onChange={(event) => {
+                nicknameSubject.next(event.target.value);
+              }}
+            ></input>
+            <div className="hint">
+              {errors?.nickname?.require ? (
+                <p>{errors?.nickname?.require}</p>
+              ) : (
+                ""
+              )}
+              {errors?.nickname?.maxLength ? (
+                <p>{errors?.nickname?.maxLength}</p>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="join__pw box">
-              <div className="join__pw_sub">비밀번호</div>
-              <Input
-                id="join__pw"
-                type="password"
-                value={pw}
-                onChange={(event) => {
-                  setPw(event.target.value);
-                }}
-                placeholder="비밀번호를 입력해주세요."
-              ></Input>
-              <div className="hint">
-                {errors?.password?.require ? (
-                  <p>{errors.Password.require}</p>
-                ) : (
-                  ""
-                )}
-              </div>
+            <div className="hint hint__duplicated">
+              {errors?.nickname?.duplicated ? (
+                <p>{errors?.nickname?.duplicated}</p>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="join__pw_again">
-              <Input
-                id="join__pw_again"
-                type="password"
-                value={rePw}
-                onChange={(event) => {
-                  setRePw(event.target.value);
-                }}
-                placeholder="비밀번호를 입력해주세요."
-              ></Input>
-              <div className="hint">
-                {errors?.repeatPassword?.duplicated ? (
-                  <p>{errors.repeatPassword.duplicated}</p>
-                ) : (
-                  ""
-                )}
-                {errors?.repeatPassword?.require ? (
-                  <p>{errors.repeatPassword.require}</p>
-                ) : (
-                  ""
-                )}
-              </div>
+            <div className="hint hint__usable">
+              {errors?.nickname?.usable ? (
+                <p>{errors?.nickname?.usable}</p>
+              ) : (
+                ""
+              )}
             </div>
-            <div className="join__email box">
-              <div className="join__email_sub">이메일</div>
-              <Input
-                id="join__email"
-                type="text"
-                value={email}
-                onChange={emailChange}
-              ></Input>
-              <div className="hint">
-                {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
-              </div>
-            </div>
-            <div className="join__name box">
-              <div className="join__name_sub">이름</div>
-              <Input
-                type="text"
-                value={name}
-                onChange={(event) => {
-                  setName(event.target.value);
-                }}
-              ></Input>
-            </div>
-            <div className="join__birth box">
-              <div className="join__birth_sub">생년월일 8자리</div>
-              <Input type="text" value={birth} onChange={birthCheck}></Input>
-              <div className="hint">
-                {errors?.birth?.eight ? <p>{errors.birth.eight}</p> : ""}
-              </div>
-            </div>
-            <Button onClick={() => register()}>회원가입</Button>
           </div>
+          <div className="join__pw join__box">
+            <div className="join__pw_sub">비밀번호를 입력해주세요.</div>
+            <input
+              id="join__pw"
+              type="password"
+              value={pw}
+              onChange={(event) => {
+                setPw(event.target.value);
+              }}
+            ></input>
+            <div className="hint">
+              {errors?.password?.require ? (
+                <p>{errors.Password.require}</p>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+          <div className="join__pw_again join__box">
+            <div className="join__pw_sub">
+              비밀번호를 다시 한번 입력 해주세요.
+            </div>
+            <input
+              id="join__pw_again"
+              type="password"
+              value={rePw}
+              onChange={(event) => {
+                setRePw(event.target.value);
+              }}
+            ></input>
+            <div className="hint">
+              {errors?.repeatPassword?.duplicated ? (
+                <p>{errors.repeatPassword.duplicated}</p>
+              ) : (
+                ""
+              )}
+              {errors?.repeatPassword?.require ? (
+                <p>{errors.repeatPassword.require}</p>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+          <div className="join__email join__box">
+            <div className="join__email_sub">이메일을 입력해주세요.</div>
+            <input
+              id="join__email"
+              type="text"
+              value={email}
+              onChange={emailChange}
+            ></input>
+            <div className="hint">
+              {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
+            </div>
+          </div>
+          <div className="join__name join__box">
+            <div className="join__name_sub">이름을 입력해주세요.</div>
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => {
+                setName(event.target.value);
+              }}
+            ></input>
+          </div>
+          <div className="join__birth join__box">
+            <div className="join__birth_sub">
+              생년월일 8자리를 입력해주세요.
+            </div>
+            <input type="text" value={birth} onChange={birthCheck}></input>
+            <div className="hint">
+              {errors?.birth?.eight ? <p>{errors.birth.eight}</p> : ""}
+            </div>
+          </div>
+          <button className="join__button" onClick={() => register()}>
+            회원가입
+          </button>
         </div>
       </div>
     </div>

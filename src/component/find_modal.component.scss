@@ -2,6 +2,7 @@
   &__title {
     display: flex;
     justify-content: center;
+    font-size: 20px;
     margin-bottom: 20px;
   }
 
@@ -13,9 +14,12 @@
 
   &__info {
     margin-bottom: 20px;
+    font-size: 16px;
   }
 
   &__email {
+    margin-top: 30px;
     width: 100%;
+    height: 60px;
   }
 }

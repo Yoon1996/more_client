@@ -1,5 +1,4 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import { Button, Input } from "antd";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,6 @@ import "./login.page.scss";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const [nickname, setNickname] = useState("");
@@ -38,8 +36,10 @@ const LoginPage = () => {
       .then(function (response) {
         console.log("성공", response);
         dispatch(loginUser(response.data));
-        alert(`${response.data.nickname}님 환영합니다!`);
-        navigate("/");
+        navigate("/login/member_login-done");
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       })
       .catch(function (error) {
         // 오류발생시 실행
@@ -70,7 +70,10 @@ const LoginPage = () => {
         .then((res) => {
           console.log("res: ", res.data);
           dispatch(loginUser(res.data));
-          navigate("/");
+          navigate("/login/member_login-done");
+          setTimeout(() => {
+            navigate("/");
+          }, 3000);
         })
         .catch((err) => {
           console.log("err: ", err);
@@ -83,40 +86,55 @@ const LoginPage = () => {
   });
 
   return (
-    <div className="login-page">
-      <div className="login-page__content">
-        <div id="login">
-          <div id="login__title">모두의 레시피에 오신 것을 환영합니다!</div>
-          <div id="login__form">
-            <div className="hint">
-              {errors?.nickname?.errId ? <p>{errors?.nickname?.errId}</p> : ""}
-            </div>
-            <Input
-              id="login__id"
-              type="id"
-              value={nickname}
-              onChange={onIdHandler}
-              placeholder="아이디를 입력해주세요."
-            />
-            <Input
-              id="login__pw"
-              type="password"
-              value={pw}
-              onChange={onPwHandler}
-              placeholder="비밀번호를 입력해주세요."
-            />
-            <Button onClick={login}>로그인</Button>
-            <Button onClick={showFindModal} type="link" id="login_search">
-              아이디, 비밀번호 찾기
-            </Button>
-            {/* <GoogleLoginButtonComponent></GoogleLoginButtonComponent> */}
-            <Button onClick={() => googleLogin()}>
-              구글 아이디로 로그인하기
-            </Button>
-            <Button onClick={() => navigate("/login/member_join")}>
-              회원가입
-            </Button>
+    <div className="login">
+      <div className="login__content">
+        <div className="login__title">
+          모두의 레시피에 오신 것을 환영합니다!
+        </div>
+        <div className="login__form">
+          <div className="login__sub-message">
+            가입시 등록한 이메일을 입력해주세요.
           </div>
+          <input
+            className="login__id login__input"
+            type="id"
+            value={nickname}
+            onChange={onIdHandler}
+          ></input>
+          <div className="login__sub-message">
+            비밀번호를 입력해주세요.
+            <div className="login__find-pw" onClick={showFindModal}>
+              비밀번호를 잊으셨나요?
+            </div>
+          </div>
+
+          <input
+            className="login__pw login__input"
+            type="password"
+            value={pw}
+            onChange={onPwHandler}
+          ></input>
+          <div className="hint">
+            {errors?.nickname?.errId ? <p>{errors?.nickname?.errId}</p> : ""}
+          </div>
+          <button className="login__button login__login-button" onClick={login}>
+            로그인
+          </button>
+          <div
+            className="login__sign"
+            onClick={() => navigate("/login/member_join")}
+          >
+            회원가입
+          </div>
+          <button
+            className="login__button login__google-login-button"
+            onClick={() => googleLogin()}
+          >
+            <span className="login__google">
+              <img src="/google-logo.png" alt="" />
+            </span>
+            구글 아이디로 로그인
+          </button>
         </div>
       </div>
       <FindModalComponent

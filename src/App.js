@@ -17,6 +17,7 @@ import LoginTemplate from './template/login.template';
 import MainTemplate from './template/main.template';
 import MyAccountTemplate from './template/my-account.template';
 import { clearAccessToken, getAccessToken } from './util/localstorage.util';
+import LoginDonePage from "./page/login_done.page";
 
 function App() {
 
@@ -61,6 +62,7 @@ function App() {
           <Route path='/login' element={<LoginTemplate></LoginTemplate>}>
             <Route path='member_login' element={<LoginPage></LoginPage>}></Route>
             <Route path='member_join' element={<JoinPage></JoinPage>}></Route>
+            <Route path="member_login-done" element={<LoginDonePage></LoginDonePage>}></Route>
           </Route>
           <Route path='/my-account' element={<AuthGaurdComponent><MyAccountTemplate></MyAccountTemplate></AuthGaurdComponent>}>
             <Route path='category_list_page' element={<CategoryListpage></CategoryListpage>}></Route>
