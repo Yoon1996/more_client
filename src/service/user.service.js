@@ -5,8 +5,8 @@ import { env } from "../evnironment/environment"
 const baseUrl = `${process.env.REACT_APP_HOST}/users`
 
 //닉네임 중복
-export const nicknameCheck = (nickname) => {
-    return axios.get(`${baseUrl}/nickname-check?nickname=${nickname}`)
+export const emailCheck = (email) => {
+    return axios.get(`${baseUrl}/email-check?email=${email}`)
 }
 
 //토큰

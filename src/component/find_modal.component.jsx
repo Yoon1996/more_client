@@ -2,10 +2,10 @@ import { Modal } from "antd";
 import React, { useState } from "react";
 import { mailAuthenticate } from "../service/mail.service";
 import "./find_modal.component.scss";
-import { useNavigate } from "react-router-dom";
+import MoreButton from "./more-button.component";
+import MoreInput from "./more-input.component";
 
 const FindModalComponent = ({ isModalOpen, handleCancel }) => {
-  const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(false);
   //이메일 등록
   const [email, setEmail] = useState("");
@@ -36,14 +36,16 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
               보내드린 임시번호로 재로그인 해주세요
             </div>
           </>
-          <button
+          <MoreButton
+            type="fill"
             className="findModal__email"
             onClick={() => {
               handleCancel();
+              setIsLoginMode(false);
             }}
           >
             로그인 창으로 이동
-          </button>
+          </MoreButton>
         </Modal>
       ) : (
         <Modal className="findModal" open={isModalOpen} onCancel={handleCancel}>
@@ -53,15 +55,19 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
             <div className="findModal__info">
               가입시 등록한 이메일을 입력해주세요.
             </div>
-            <input
+            <MoreInput
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            ></input>
+            ></MoreInput>
           </>
-          <button className="findModal__email" onClick={byEmail}>
+          <MoreButton
+            type={"fill"}
+            className="findModal__email"
+            onClick={byEmail}
+          >
             임시번호 전송
-          </button>
+          </MoreButton>
         </Modal>
       )}
     </>

@@ -1,9 +1,9 @@
-import { Button } from "antd";
-import Input from "antd/es/input/Input";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Subject, debounceTime, distinctUntilChanged } from "rxjs";
-import { nicknameCheck, signUp } from "../service/user.service";
+import { Subject } from "rxjs";
+import MoreButton from "../component/more-button.component";
+import MoreInput from "../component/more-input.component";
+import { emailCheck, signUp } from "../service/user.service";
 import "./join.page.scss";
 
 const JoinPage = () => {
@@ -22,13 +22,13 @@ const JoinPage = () => {
   //에러메세지
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    const sub = nicknameChangeSub();
-    return () => {
-      console.log("unsubscribe !!!");
-      sub.unsubscribe();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const sub = nicknameChangeSub();
+  //   return () => {
+  //     console.log("unsubscribe !!!");
+  //     sub.unsubscribe();
+  //   };
+  // }, []);
 
   //이메일 체크
   const regex = new RegExp(
@@ -38,6 +38,16 @@ const JoinPage = () => {
   const emailChange = (event) => {
     const newEmail = event.target.value;
     setEmail(newEmail);
+
+    emailCheck(newEmail)
+      .then((res) => {
+        if (res.data.isDuplicated === false) {
+          //사용 가능한 아이디 표시
+        }
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
 
     const checkRes = regex.test(newEmail);
 
@@ -66,46 +76,46 @@ const JoinPage = () => {
     }
   };
 
-  const nicknameChangeSub = () => {
-    return nicknameSubject
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe((newNickname) => {
-        setNickname(newNickname);
-        if (!newNickname) {
-          setErrors({
-            ...errors,
-            nickname: { require: "닉네임을 입력해주세요." },
-          });
-        } else if (newNickname.length > 20) {
-          setErrors({
-            ...errors,
-            nickname: {
-              maxLength: "닉네임은 20자 이내로 작성해주세요.",
-            },
-          });
-        } else {
-          nicknameCheck(newNickname)
-            .then((res) => {
-              if (res.data.isDuplicated) {
-                setErrors({
-                  ...errors,
-                  nickname: { duplicated: "중복된 이름입니다." },
-                });
-              } else {
-                setErrors({
-                  ...errors,
-                  nickname: { usable: "사용 가능한 이름입니다." },
-                });
-              }
-              console.log("res.data: ", res.data);
-            })
-            .catch((errors) => {
-              console.log("errors: ", errors);
-            });
-          console.log("newNickname:", newNickname);
-        }
-      });
-  };
+  // const nicknameChangeSub = () => {
+  //   return nicknameSubject
+  //     .pipe(debounceTime(500), distinctUntilChanged())
+  //     .subscribe((newNickname) => {
+  //       setNickname(newNickname);
+  //       if (!newNickname) {
+  //         setErrors({
+  //           ...errors,
+  //           nickname: { require: "닉네임을 입력해주세요." },
+  //         });
+  //       } else if (newNickname.length > 20) {
+  //         setErrors({
+  //           ...errors,
+  //           nickname: {
+  //             maxLength: "닉네임은 20자 이내로 작성해주세요.",
+  //           },
+  //         });
+  //       } else {
+  //         nicknameCheck(newNickname)
+  //           .then((res) => {
+  //             if (res.data.isDuplicated) {
+  //               setErrors({
+  //                 ...errors,
+  //                 nickname: { duplicated: "중복된 이름입니다." },
+  //               });
+  //             } else {
+  //               setErrors({
+  //                 ...errors,
+  //                 nickname: { usable: "사용 가능한 이름입니다." },
+  //               });
+  //             }
+  //             console.log("res.data: ", res.data);
+  //           })
+  //           .catch((errors) => {
+  //             console.log("errors: ", errors);
+  //           });
+  //         console.log("newNickname:", newNickname);
+  //       }
+  //     });
+  // };
 
   useEffect(() => {
     if (!pw) {
@@ -144,7 +154,6 @@ const JoinPage = () => {
     };
 
     if (
-      errors?.nickname?.usable &&
       !errors?.password?.require &&
       !errors?.repeatPassword?.duplicated &&
       !errors?.email?.pattern &&
@@ -176,29 +185,30 @@ const JoinPage = () => {
       <div className="join__header">
         <div className="join__header-right">
           <div className="join__header-message">이미 계정이 있으신가요?</div>
-          <button
+          <MoreButton
+            type={"outline"}
             onClick={() => {
               navigate("/login/member_login");
             }}
             className="join__header-bt"
           >
             로그인
-          </button>
+          </MoreButton>
         </div>
       </div>
       <div className="join__content">
         <div className="join__title">모두의 레시피에 오신 것을 환영합니다!</div>
         <div className="join__form">
-          <div className="join__id join__box">
+          {/* <div className="join__id join__box">
             <div className="join__id_sub">사용할 아이디를 입력해주세요.</div>
-            <input
+            <MoreInput
               id="join__id"
               type="text"
               defaultValue={nickname}
               onChange={(event) => {
                 nicknameSubject.next(event.target.value);
               }}
-            ></input>
+            ></MoreInput>
             <div className="hint">
               {errors?.nickname?.require ? (
                 <p>{errors?.nickname?.require}</p>
@@ -225,17 +235,31 @@ const JoinPage = () => {
                 ""
               )}
             </div>
+          </div> */}
+          <div className="join__email join__box">
+            <div className="join__email_sub">
+              아이디로 사용할 이메일을 입력해주세요.
+            </div>
+            <MoreInput
+              id="join__email"
+              type="text"
+              value={email}
+              onChange={emailChange}
+            ></MoreInput>
+            <div className="hint">
+              {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
+            </div>
           </div>
           <div className="join__pw join__box">
             <div className="join__pw_sub">비밀번호를 입력해주세요.</div>
-            <input
+            <MoreInput
               id="join__pw"
               type="password"
               value={pw}
               onChange={(event) => {
                 setPw(event.target.value);
               }}
-            ></input>
+            ></MoreInput>
             <div className="hint">
               {errors?.password?.require ? (
                 <p>{errors.Password.require}</p>
@@ -248,14 +272,14 @@ const JoinPage = () => {
             <div className="join__pw_sub">
               비밀번호를 다시 한번 입력 해주세요.
             </div>
-            <input
+            <MoreInput
               id="join__pw_again"
               type="password"
               value={rePw}
               onChange={(event) => {
                 setRePw(event.target.value);
               }}
-            ></input>
+            ></MoreInput>
             <div className="hint">
               {errors?.repeatPassword?.duplicated ? (
                 <p>{errors.repeatPassword.duplicated}</p>
@@ -269,40 +293,37 @@ const JoinPage = () => {
               )}
             </div>
           </div>
-          <div className="join__email join__box">
-            <div className="join__email_sub">이메일을 입력해주세요.</div>
-            <input
-              id="join__email"
-              type="text"
-              value={email}
-              onChange={emailChange}
-            ></input>
-            <div className="hint">
-              {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
-            </div>
-          </div>
+
           <div className="join__name join__box">
             <div className="join__name_sub">이름을 입력해주세요.</div>
-            <input
+            <MoreInput
               type="text"
               value={name}
               onChange={(event) => {
                 setName(event.target.value);
               }}
-            ></input>
+            ></MoreInput>
           </div>
           <div className="join__birth join__box">
             <div className="join__birth_sub">
               생년월일 8자리를 입력해주세요.
             </div>
-            <input type="text" value={birth} onChange={birthCheck}></input>
+            <MoreInput
+              type="text"
+              value={birth}
+              onChange={birthCheck}
+            ></MoreInput>
             <div className="hint">
               {errors?.birth?.eight ? <p>{errors.birth.eight}</p> : ""}
             </div>
           </div>
-          <button className="join__button" onClick={() => register()}>
+          <MoreButton
+            type={"fill"}
+            className="join__button"
+            onClick={() => register()}
+          >
             회원가입
-          </button>
+          </MoreButton>
         </div>
       </div>
     </div>

@@ -3,20 +3,18 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FindModalComponent from "../component/find_modal.component";
-import { loginCheck, socialLogin } from "../service/user.service";
+import { emailCheck, loginCheck, socialLogin } from "../service/user.service";
 import { loginUser } from "../store/user.store";
 import "./login.page.scss";
+import MoreButton from "../component/more-button.component";
+import MoreInput from "../component/more-input.component";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-
-  const onIdHandler = (e) => {
-    setNickname(e.target.value);
-  };
 
   const onPwHandler = (e) => {
     setPw(e.target.value);
@@ -25,10 +23,31 @@ const LoginPage = () => {
   //에러 메세지 state
   const [errors, setErrors] = useState({});
 
+  //이메일 체크
+  const regex = new RegExp(
+    "([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(.[!#-'*+/-9=?A-Z^-~-]+)*|[[\t -Z^-~]*])"
+  );
+
+  const emailChange = (event) => {
+    const newEmail = event.target.value;
+    setEmail(newEmail);
+
+    const checkRes = regex.test(newEmail);
+
+    if (checkRes) {
+      setErrors({ ...errors, email: null });
+    } else {
+      setErrors({
+        ...errors,
+        email: { pattern: "이메일 형식을 확인해주세요." },
+      });
+    }
+  };
+
   //로그인 핸들러
   const login = () => {
     const LoginParams = {
-      nickname: nickname,
+      email: email,
       password: pw,
     };
 
@@ -88,53 +107,64 @@ const LoginPage = () => {
   return (
     <div className="login">
       <div className="login__content">
-        <div className="login__title">
-          모두의 레시피에 오신 것을 환영합니다!
-        </div>
+        <div className="login__title">로그인</div>
         <div className="login__form">
           <div className="login__sub-message">
             가입시 등록한 이메일을 입력해주세요.
           </div>
-          <input
-            className="login__id login__input"
+          <MoreInput
+            className={
+              errors?.email?.pattern
+                ? "login__id login__input error"
+                : "login__id login__input"
+            }
             type="id"
-            value={nickname}
-            onChange={onIdHandler}
-          ></input>
-          <div className="login__sub-message">
-            비밀번호를 입력해주세요.
-            <div className="login__find-pw" onClick={showFindModal}>
-              비밀번호를 잊으셨나요?
+            value={email}
+            onChange={emailChange}
+          ></MoreInput>
+          <div className="more-input__hint">
+            {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
+          </div>
+          <div className="login__sub-wrap">
+            <div className="login__sub-message">
+              비밀번호를 입력해주세요.
+              <div className="login__find-pw" onClick={showFindModal}>
+                비밀번호를 잊으셨나요?
+              </div>
             </div>
           </div>
 
-          <input
+          <MoreInput
             className="login__pw login__input"
             type="password"
             value={pw}
             onChange={onPwHandler}
-          ></input>
-          <div className="hint">
+          ></MoreInput>
+          <div className="more-input__hint">
             {errors?.nickname?.errId ? <p>{errors?.nickname?.errId}</p> : ""}
           </div>
-          <button className="login__button login__login-button" onClick={login}>
+          <MoreButton
+            type={"fill"}
+            className="login__button login__login-button"
+            onClick={login}
+          >
             로그인
-          </button>
+          </MoreButton>
           <div
             className="login__sign"
             onClick={() => navigate("/login/member_join")}
           >
             회원가입
           </div>
-          <button
+          <MoreButton
             className="login__button login__google-login-button"
             onClick={() => googleLogin()}
           >
             <span className="login__google">
-              <img src="/google-logo.png" alt="" />
+              <img src="/google-logo.svg" alt="" />
             </span>
             구글 아이디로 로그인
-          </button>
+          </MoreButton>
         </div>
       </div>
       <FindModalComponent

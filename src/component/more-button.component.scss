@@ -1,0 +1,32 @@
+.more-button {
+  width: 100%;
+  height: 56px;
+  border: transparent;
+  border-radius: 30px;
+  cursor: pointer;
+
+  &.fill {
+    background: var(--more-primary-normal);
+  }
+
+  &.fill:hover {
+    background: var(--more-primary-light);
+  }
+
+  &.fill:focus {
+    background: var(--more-primary-dark);
+  }
+  &.outline {
+    background: var(--more-basic-white);
+    border: 1px solid var(--more-primary-dark);
+  }
+  &.outline:hover {
+    background: var(--more-primary-light);
+    border: 1px solid var(--more-primary-normal);
+  }
+
+  &.outline:focus {
+    background: var(--more-primary-light);
+    border: 1px solid var(--more-primary-dark);
+  }
+}

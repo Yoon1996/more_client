@@ -1,0 +1,27 @@
+.more-input {
+  width: 100%;
+  height: 56px;
+  background: var(--more-basic-white);
+  border: 2px solid var(--more-gray-scale-cc);
+  border-radius: 10px;
+  padding: 13px 24px;
+
+  &:focus {
+    background: var(--more-basic-white);
+    border: 1px solid var(--more-primary-dark);
+    outline: 1px solid var(--more-primary-dark);
+    border-radius: 10px;
+  }
+
+  &.error:focus {
+    border: 1px solid var(--more-system-error);
+    outline: 1px solid var(--more-system-error);
+  }
+
+  &__hint {
+    width: 100%;
+    height: 28px;
+    line-height: 28px;
+    color: var(--more-system-error);
+  }
+}

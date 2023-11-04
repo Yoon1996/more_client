@@ -1,9 +1,8 @@
 import { Button, Col, Form, Input } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Subject, debounceTime, distinctUntilChanged } from "rxjs";
 import PasswordCheckModal from "../component/password_check.modal";
-import { infoUpdate, nicknameCheck } from "../service/user.service";
+import { infoUpdate } from "../service/user.service";
 import { updateUser } from "../store/user.store";
 import "./my-account.page.scss";
 import "./my_info.page.scss";
@@ -25,56 +24,56 @@ const MyInfoPage = () => {
   const [errors, setErrors] = useState({});
 
   //닉네임 체크
-  const [nicknameSubject] = useState(() => new Subject());
+  // const [nicknameSubject] = useState(() => new Subject());
 
-  const nicknameChangeSub = () => {
-    return nicknameSubject
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe((newNickname) => {
-        setUserData({ ...userData, nickname: newNickname });
-        if (!newNickname) {
-          setErrors({
-            ...errors,
-            nickname: { require: "닉네임을 입력해주세요." },
-          });
-        } else if (newNickname.length > 20) {
-          setErrors({
-            ...errors,
-            nickname: {
-              maxLength: "닉네임은 20자 이내로 작성해주세요.",
-            },
-          });
-        } else {
-          nicknameCheck(newNickname)
-            .then((res) => {
-              if (res.data.isDuplicated) {
-                setErrors({
-                  ...errors,
-                  nickname: { duplicated: "중복된 이름입니다." },
-                });
-              } else {
-                setErrors({
-                  ...errors,
-                  nickname: { usable: "사용 가능한 이름입니다." },
-                });
-              }
-              console.log("res.data: ", res.data);
-            })
-            .catch((errors) => {
-              console.log("errors: ", errors);
-            });
-          console.log("newNickname:", newNickname);
-        }
-      });
-  };
+  // const nicknameChangeSub = () => {
+  //   return nicknameSubject
+  //     .pipe(debounceTime(500), distinctUntilChanged())
+  //     .subscribe((newNickname) => {
+  //       setUserData({ ...userData, nickname: newNickname });
+  //       if (!newNickname) {
+  //         setErrors({
+  //           ...errors,
+  //           nickname: { require: "닉네임을 입력해주세요." },
+  //         });
+  //       } else if (newNickname.length > 20) {
+  //         setErrors({
+  //           ...errors,
+  //           nickname: {
+  //             maxLength: "닉네임은 20자 이내로 작성해주세요.",
+  //           },
+  //         });
+  //       } else {
+  //         nicknameCheck(newNickname)
+  //           .then((res) => {
+  //             if (res.data.isDuplicated) {
+  //               setErrors({
+  //                 ...errors,
+  //                 nickname: { duplicated: "중복된 이름입니다." },
+  //               });
+  //             } else {
+  //               setErrors({
+  //                 ...errors,
+  //                 nickname: { usable: "사용 가능한 이름입니다." },
+  //               });
+  //             }
+  //             console.log("res.data: ", res.data);
+  //           })
+  //           .catch((errors) => {
+  //             console.log("errors: ", errors);
+  //           });
+  //         console.log("newNickname:", newNickname);
+  //       }
+  //     });
+  // };
 
-  useEffect(() => {
-    const sub = nicknameChangeSub();
-    return () => {
-      console.log("unsubscribe !!!");
-      sub.unsubscribe();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const sub = nicknameChangeSub();
+  //   return () => {
+  //     console.log("unsubscribe !!!");
+  //     sub.unsubscribe();
+  //   };
+  // }, []);
 
   //이메일 체크
   const regex = new RegExp(
@@ -191,7 +190,7 @@ const MyInfoPage = () => {
                     //   setUserData({ ...userData, nickname: e.target.value })
                     // }
                     onChange={(e) => {
-                      nicknameSubject.next(e.target.value);
+                      // nicknameSubject.next(e.target.value);
                     }}
                   ></Input>
                   <div className="my_info__hint">

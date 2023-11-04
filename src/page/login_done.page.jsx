@@ -11,7 +11,7 @@ const LoginDonePage = () => {
     <>
       <div className="login-done">
         <div>환영합니다!</div>
-        <div>{user.nickname}님만의 레시피를 저장해보세요!</div>
+        <div>{user.name}님만의 레시피를 저장해보세요!</div>
       </div>
       <ConfettiComponent></ConfettiComponent>
     </>

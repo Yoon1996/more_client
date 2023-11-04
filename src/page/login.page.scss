@@ -6,9 +6,9 @@
   align-items: center;
 
   &__content {
-    width: 540px;
+    width: 728px;
     height: 650px;
-    margin: 0 auto;
+    // margin: 0 auto;
   }
 
   &__title {
@@ -20,23 +20,25 @@
 
   &__form {
     width: 100%;
-    height: 550px;
-    padding: 36px 46px;
+    height: 610px;
+    padding: 36px 140px 42px 140px;
     background-color: #f6f8fa;
     border: 1px #d8dee4;
     border-radius: 10px;
   }
 
+  &__sub-wrap {
+    margin-top: 32px;
+  }
+
   &__sub-message {
     font-size: 20px;
-    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 12px;
   }
 
   &__input {
-    height: 60px;
-    margin-bottom: 32px;
     border-radius: 10px;
     padding: 13px 24px;
   }
@@ -59,12 +61,8 @@
     margin: 15px;
   }
 
-  &__button {
-    height: 60px;
-  }
-
   &__login-button {
-    margin-top: 28px;
+    margin-top: 60px;
   }
 
   &__google-login-button {
