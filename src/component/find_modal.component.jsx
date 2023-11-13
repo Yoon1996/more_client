@@ -32,6 +32,9 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
           <div className="findModal__title">비밀번호 재설정</div>
           <div className="findModal__util"></div>
           <>
+            <div className="findModal__success">
+              <img src="/icon/done.svg" alt="" />
+            </div>
             <div className="findModal__info">
               보내드린 임시번호로 재로그인 해주세요
             </div>

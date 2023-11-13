@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
-import "./header.layout.scss";
 import { UserOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import InfoDropComponent from "../component/info_drop.component";
-import { clearAccessToken } from "../util/localstorage.util";
-import { logoutUser, userInit } from "../store/user.store";
 import { viewCategories } from "../service/category.service";
 import { updateCategory } from "../store/category.store";
-import { filterRecipe, showRecipe } from "../service/recipe.service";
-import { setRecipes } from "../store/recipe.store";
+import { logoutUser } from "../store/user.store";
+import "./header.layout.scss";
 
 const HeaderLayout = ({ isMyAccount }) => {
   // const [viewCategoryList, setViewCategoryList] = useState([]);

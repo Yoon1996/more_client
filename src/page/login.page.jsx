@@ -8,6 +8,7 @@ import { loginUser } from "../store/user.store";
 import "./login.page.scss";
 import MoreButton from "../component/more-button.component";
 import MoreInput from "../component/more-input.component";
+import SubHeader from "../layout/sub_header.layout";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ const LoginPage = () => {
 
   //에러 메세지 state
   const [errors, setErrors] = useState({});
+
+  //체크이미지 state
+  const [check, setCheck] = useState(false);
 
   //이메일 체크
   const regex = new RegExp(
@@ -106,6 +110,7 @@ const LoginPage = () => {
 
   return (
     <div className="login">
+      <SubHeader></SubHeader>
       <div className="login__content">
         <div className="login__title">로그인</div>
         <div className="login__form">
@@ -128,7 +133,7 @@ const LoginPage = () => {
           <div className="login__sub-wrap">
             <div className="login__sub-message">
               비밀번호를 입력해주세요.
-              <div className="login__find-pw" onClick={showFindModal}>
+              <div className="login__find-pw login__bm" onClick={showFindModal}>
                 비밀번호를 잊으셨나요?
               </div>
             </div>
@@ -151,12 +156,13 @@ const LoginPage = () => {
             로그인
           </MoreButton>
           <div
-            className="login__sign"
+            className="login__sign login__bm"
             onClick={() => navigate("/login/member_join")}
           >
             회원가입
           </div>
           <MoreButton
+            type="outline"
             className="login__button login__google-login-button"
             onClick={() => googleLogin()}
           >

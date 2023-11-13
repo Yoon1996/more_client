@@ -5,6 +5,8 @@ import MoreButton from "../component/more-button.component";
 import MoreInput from "../component/more-input.component";
 import { emailCheck, signUp } from "../service/user.service";
 import "./join.page.scss";
+import { env } from "../evnironment/environment";
+import SubHeader from "../layout/sub_header.layout";
 
 const JoinPage = () => {
   const navigate = useNavigate();
@@ -17,18 +19,22 @@ const JoinPage = () => {
   const [name, setName] = useState("");
   const [birth, setbirth] = useState("");
 
+  //이미지 보이기
+  const [showCheckEmail, setShowCheckEmail] = useState(false);
+  const [showCheckPw, setShowCheckPw] = useState(false);
+  const [showCheckName, setShowCheckName] = useState(false);
+  const [showCheckBirth, setShowCheckBirth] = useState(false);
+
+  //subHeader 버튼 변경
+  const [isLoginPage, setIsLoginPage] = useState(true);
+
+  //이메일 중복 여부
+  const [duplicatedEmail, setDuplicatedEmail] = useState(false);
+
   const [nicknameSubject] = useState(() => new Subject());
 
   //에러메세지
   const [errors, setErrors] = useState({});
-
-  // useEffect(() => {
-  //   const sub = nicknameChangeSub();
-  //   return () => {
-  //     console.log("unsubscribe !!!");
-  //     sub.unsubscribe();
-  //   };
-  // }, []);
 
   //이메일 체크
   const regex = new RegExp(
@@ -39,22 +45,26 @@ const JoinPage = () => {
     const newEmail = event.target.value;
     setEmail(newEmail);
 
-    emailCheck(newEmail)
-      .then((res) => {
-        if (res.data.isDuplicated === false) {
-          //사용 가능한 아이디 표시
-        }
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
-
     const checkRes = regex.test(newEmail);
 
     if (checkRes) {
       setErrors({ ...errors, email: null });
+      emailCheck(newEmail)
+        .then((res) => {
+          if (res.data.isDuplicated === true) {
+            setShowCheckEmail(false);
+            setDuplicatedEmail(true);
+          } else {
+            setShowCheckEmail(true);
+            setDuplicatedEmail(false);
+          }
+        })
+        .catch((err) => {
+          console.log("err: ", err);
+        });
     } else {
       setErrors({ ...errors, email: { pattern: "이메일 형식이 아닙니다." } });
+      setShowCheckEmail(false);
     }
   };
 
@@ -68,55 +78,17 @@ const JoinPage = () => {
         ...errors,
         birth: { eight: "생년월일은 8자로 입력해주세요." },
       });
+      setShowCheckBirth(false);
     } else {
       setErrors({
         ...errors,
         birth: null,
       });
+      setShowCheckBirth(true);
     }
   };
 
-  // const nicknameChangeSub = () => {
-  //   return nicknameSubject
-  //     .pipe(debounceTime(500), distinctUntilChanged())
-  //     .subscribe((newNickname) => {
-  //       setNickname(newNickname);
-  //       if (!newNickname) {
-  //         setErrors({
-  //           ...errors,
-  //           nickname: { require: "닉네임을 입력해주세요." },
-  //         });
-  //       } else if (newNickname.length > 20) {
-  //         setErrors({
-  //           ...errors,
-  //           nickname: {
-  //             maxLength: "닉네임은 20자 이내로 작성해주세요.",
-  //           },
-  //         });
-  //       } else {
-  //         nicknameCheck(newNickname)
-  //           .then((res) => {
-  //             if (res.data.isDuplicated) {
-  //               setErrors({
-  //                 ...errors,
-  //                 nickname: { duplicated: "중복된 이름입니다." },
-  //               });
-  //             } else {
-  //               setErrors({
-  //                 ...errors,
-  //                 nickname: { usable: "사용 가능한 이름입니다." },
-  //               });
-  //             }
-  //             console.log("res.data: ", res.data);
-  //           })
-  //           .catch((errors) => {
-  //             console.log("errors: ", errors);
-  //           });
-  //         console.log("newNickname:", newNickname);
-  //       }
-  //     });
-  // };
-
+  //비밀번호 체크
   useEffect(() => {
     if (!pw) {
       setErrors({
@@ -135,13 +107,33 @@ const JoinPage = () => {
         ...errors,
         repeatPassword: { duplicated: "비밀번호가 일치하지 않습니다." },
       });
+      setShowCheckPw(false);
     } else {
       setErrors({
         ...errors,
         repeatPassword: null,
       });
+      setShowCheckPw(true);
+      if (rePw.length === 0) {
+        setShowCheckPw(false);
+      }
     }
   }, [pw, rePw]);
+
+  //이름체크
+  let n_RegExp = /^[가-힣]{2,15}$/;
+
+  const nameChange = (e) => {
+    const newName = e.target.value;
+    setName(newName);
+    if (newName.value === "") {
+      setShowCheckName(false);
+    } else if (!n_RegExp.test(newName.value)) {
+      setShowCheckName(false);
+    } else {
+      setShowCheckName(true);
+    }
+  };
 
   //회원가입 요청
   const register = () => {
@@ -181,152 +173,121 @@ const JoinPage = () => {
   };
 
   return (
-    <div className="join">
-      <div className="join__header">
-        <div className="join__header-right">
-          <div className="join__header-message">이미 계정이 있으신가요?</div>
-          <MoreButton
-            type={"outline"}
-            onClick={() => {
-              navigate("/login/member_login");
-            }}
-            className="join__header-bt"
-          >
-            로그인
-          </MoreButton>
-        </div>
-      </div>
-      <div className="join__content">
-        <div className="join__title">모두의 레시피에 오신 것을 환영합니다!</div>
-        <div className="join__form">
-          {/* <div className="join__id join__box">
-            <div className="join__id_sub">사용할 아이디를 입력해주세요.</div>
-            <MoreInput
-              id="join__id"
-              type="text"
-              defaultValue={nickname}
-              onChange={(event) => {
-                nicknameSubject.next(event.target.value);
-              }}
-            ></MoreInput>
-            <div className="hint">
-              {errors?.nickname?.require ? (
-                <p>{errors?.nickname?.require}</p>
-              ) : (
-                ""
-              )}
-              {errors?.nickname?.maxLength ? (
-                <p>{errors?.nickname?.maxLength}</p>
-              ) : (
-                ""
-              )}
+    <>
+      <div className="join">
+        <SubHeader isLoginPage={isLoginPage}></SubHeader>
+        <div className="join__content">
+          <div className="join__title">모두의 레시피 회원가입</div>
+          <div className="join__form">
+            <div className="join__email join__box">
+              <div className="join__email_sub join__sub">
+                아이디로 사용할 이메일을 입력해주세요.
+              </div>
+              <MoreInput
+                className={`join__email__sub" ${
+                  errors?.email?.pattern || duplicatedEmail
+                    ? "error"
+                    : email.length === 0
+                    ? ""
+                    : "success"
+                }`}
+                id="join__email"
+                type="text"
+                value={email}
+                onChange={emailChange}
+                showCheck={showCheckEmail}
+              ></MoreInput>
+              <div className="more-input__hint">
+                {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
+              </div>
             </div>
-            <div className="hint hint__duplicated">
-              {errors?.nickname?.duplicated ? (
-                <p>{errors?.nickname?.duplicated}</p>
-              ) : (
-                ""
-              )}
+            <div className="join__pw join__box">
+              <div className="join__pw_sub join__sub">
+                비밀번호를 입력해주세요.
+              </div>
+              <MoreInput
+                id="join__pw"
+                type="password"
+                value={pw}
+                onChange={(event) => {
+                  setPw(event.target.value);
+                }}
+              ></MoreInput>
+              <div className="hint">
+                {errors?.password?.require ? (
+                  <p>{errors.Password.require}</p>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
-            <div className="hint hint__usable">
-              {errors?.nickname?.usable ? (
-                <p>{errors?.nickname?.usable}</p>
-              ) : (
-                ""
-              )}
+            <div className="join__pw_again join__box">
+              <div className="join__pw_sub join__sub">
+                비밀번호를 다시 한번 입력 해주세요.
+              </div>
+              <MoreInput
+                className={
+                  errors?.repeatPassword?.duplicated ? "error" : "success"
+                }
+                id="join__pw_again"
+                type="password"
+                value={rePw}
+                onChange={(event) => {
+                  setRePw(event.target.value);
+                }}
+                showCheck={showCheckPw}
+              ></MoreInput>
+              <div className="more-input__hint">
+                {errors?.repeatPassword?.duplicated ? (
+                  <p>{errors.repeatPassword.duplicated}</p>
+                ) : (
+                  ""
+                )}
+                {errors?.repeatPassword?.require ? (
+                  <p>{errors.repeatPassword.require}</p>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
-          </div> */}
-          <div className="join__email join__box">
-            <div className="join__email_sub">
-              아이디로 사용할 이메일을 입력해주세요.
-            </div>
-            <MoreInput
-              id="join__email"
-              type="text"
-              value={email}
-              onChange={emailChange}
-            ></MoreInput>
-            <div className="hint">
-              {errors?.email?.pattern ? <p>{errors.email.pattern}</p> : ""}
-            </div>
-          </div>
-          <div className="join__pw join__box">
-            <div className="join__pw_sub">비밀번호를 입력해주세요.</div>
-            <MoreInput
-              id="join__pw"
-              type="password"
-              value={pw}
-              onChange={(event) => {
-                setPw(event.target.value);
-              }}
-            ></MoreInput>
-            <div className="hint">
-              {errors?.password?.require ? (
-                <p>{errors.Password.require}</p>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-          <div className="join__pw_again join__box">
-            <div className="join__pw_sub">
-              비밀번호를 다시 한번 입력 해주세요.
-            </div>
-            <MoreInput
-              id="join__pw_again"
-              type="password"
-              value={rePw}
-              onChange={(event) => {
-                setRePw(event.target.value);
-              }}
-            ></MoreInput>
-            <div className="hint">
-              {errors?.repeatPassword?.duplicated ? (
-                <p>{errors.repeatPassword.duplicated}</p>
-              ) : (
-                ""
-              )}
-              {errors?.repeatPassword?.require ? (
-                <p>{errors.repeatPassword.require}</p>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
 
-          <div className="join__name join__box">
-            <div className="join__name_sub">이름을 입력해주세요.</div>
-            <MoreInput
-              type="text"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-              }}
-            ></MoreInput>
-          </div>
-          <div className="join__birth join__box">
-            <div className="join__birth_sub">
-              생년월일 8자리를 입력해주세요.
+            <div className="join__name join__box">
+              <div className="join__name_sub join__sub">
+                이름을 입력해주세요.
+              </div>
+              <MoreInput
+                type="text"
+                value={name}
+                onChange={nameChange}
+                showCheck={showCheckName}
+              ></MoreInput>
             </div>
-            <MoreInput
-              type="text"
-              value={birth}
-              onChange={birthCheck}
-            ></MoreInput>
-            <div className="hint">
-              {errors?.birth?.eight ? <p>{errors.birth.eight}</p> : ""}
+            <div className="join__birth join__box">
+              <div className="join__birth_sub join__sub">
+                생년월일 8자리를 입력해주세요.
+              </div>
+              <MoreInput
+                className={errors?.birth?.eight ? "error" : "success"}
+                type="text"
+                value={birth}
+                onChange={birthCheck}
+                showCheck={showCheckBirth}
+              ></MoreInput>
+              <div className="more-input__hint">
+                {errors?.birth?.eight ? <p>{errors.birth.eight}</p> : ""}
+              </div>
             </div>
+            <MoreButton
+              type={"fill"}
+              className="join__button"
+              onClick={() => register()}
+            >
+              회원가입
+            </MoreButton>
           </div>
-          <MoreButton
-            type={"fill"}
-            className="join__button"
-            onClick={() => register()}
-          >
-            회원가입
-          </MoreButton>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

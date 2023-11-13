@@ -1,4 +1,10 @@
 .more-input {
+  &__wrap {
+    width: 100%;
+    height: 56px;
+    position: relative;
+  }
+
   width: 100%;
   height: 56px;
   background: var(--more-basic-white);
@@ -18,10 +24,22 @@
     outline: 1px solid var(--more-system-error);
   }
 
+  &.success:focus {
+    border: 1px solid var(--more-system-positive);
+    outline: 1px solid var(--more-system-positive);
+  }
+
   &__hint {
     width: 100%;
     height: 28px;
     line-height: 28px;
     color: var(--more-system-error);
+  }
+
+  &__check {
+    position: absolute;
+    right: 28px;
+    top: 28px;
+    margin-top: -14px;
   }
 }

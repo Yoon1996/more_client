@@ -18,15 +18,15 @@
   }
   &.outline {
     background: var(--more-basic-white);
-    border: 1px solid var(--more-primary-dark);
+    border: 3px solid var(--more-primary-dark);
   }
   &.outline:hover {
     background: var(--more-primary-light);
-    border: 1px solid var(--more-primary-normal);
+    border: 3px solid var(--more-primary-normal);
   }
 
   &.outline:focus {
     background: var(--more-primary-light);
-    border: 1px solid var(--more-primary-dark);
+    border: 3px solid var(--more-primary-dark);
   }
 }
