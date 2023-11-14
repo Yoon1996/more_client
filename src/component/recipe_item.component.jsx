@@ -1,12 +1,10 @@
 import { DownOutlined, PlusCircleFilled } from "@ant-design/icons";
 import { Button, Dropdown, Input, Modal, Space } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { create } from "../service/recipe.service";
 import "./recipe_item.component.scss";
-import { viewCategories } from "../service/category.service";
-import { useDispatch, useSelector } from "react-redux";
-import { updateCategory } from "../store/category.store";
 
 const RecipeItemComponent = () => {
   const [recipeName, setRecipeName] = useState("");
@@ -103,7 +101,12 @@ const RecipeItemComponent = () => {
   return (
     <>
       <div className="recipe__item">
-        <PlusCircleFilled onClick={showModal} className="recipe__item-add" />
+        <img
+          onClick={showModal}
+          className="recipe__item-add"
+          src="/icon/add.svg"
+          alt=""
+        />
       </div>
       <Modal
         className="modal"

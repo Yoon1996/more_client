@@ -54,7 +54,16 @@ const RecipeItemListComponent = () => {
           className="recipeList__item"
           key={index}
         >
-          {recipe?.name}
+          <div className="recipeList__photobox">
+            <img src="/icon/bread.png" alt="" />
+          </div>
+          <div className="recipeList__bottom">
+            <div className="recipeList__bottom-name">{recipe?.name}</div>
+            <div className="recipeList__bottom-bookmark">
+              <img src="/icon/bookmark.svg" alt="" />
+            </div>
+            <div className="recipeList__bottom-time">등록일:23.10.10</div>
+          </div>
         </div>
       ))}
       <RecipeListModalComponent

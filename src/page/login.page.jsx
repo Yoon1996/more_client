@@ -77,7 +77,11 @@ const LoginPage = () => {
       });
   };
 
+  //모달창 보이기
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //모달창 뒷배경
+  const [isDark, setIsDark] = useState(false);
 
   const showFindModal = () => {
     setIsModalOpen(true);
@@ -173,10 +177,15 @@ const LoginPage = () => {
           </MoreButton>
         </div>
       </div>
-      <FindModalComponent
-        isModalOpen={isModalOpen}
-        handleCancel={handleCancel}
-      ></FindModalComponent>
+      {isModalOpen ? <div className="findModal__dark"></div> : ""}
+      {isModalOpen ? (
+        <FindModalComponent
+          isModalOpen={isModalOpen}
+          handleCancel={handleCancel}
+        ></FindModalComponent>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

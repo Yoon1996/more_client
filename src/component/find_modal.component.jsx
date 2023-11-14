@@ -1,5 +1,4 @@
-import { Modal } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { mailAuthenticate } from "../service/mail.service";
 import "./find_modal.component.scss";
 import MoreButton from "./more-button.component";
@@ -28,17 +27,18 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
   return (
     <>
       {isLoginMode ? (
-        <Modal className="findModal" open={isModalOpen} onCancel={handleCancel}>
-          <div className="findModal__title">비밀번호 재설정</div>
-          <div className="findModal__util"></div>
-          <>
-            <div className="findModal__success">
-              <img src="/icon/done.svg" alt="" />
-            </div>
-            <div className="findModal__info">
-              보내드린 임시번호로 재로그인 해주세요
-            </div>
-          </>
+        <div className="findModal" open={isModalOpen} onCancel={handleCancel}>
+          <div className="findModal__title2">임시번호 전송 완료</div>
+          <div className="findModal__util2">
+            <>
+              <div className="findModal__success">
+                <img src="/icon/done.png" alt="" />
+              </div>
+              <div className="findModal__info2">
+                보내드린 임시번호로 재로그인 해주세요
+              </div>
+            </>
+          </div>
           <MoreButton
             type="fill"
             className="findModal__email"
@@ -49,20 +49,21 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
           >
             로그인 창으로 이동
           </MoreButton>
-        </Modal>
+        </div>
       ) : (
-        <Modal className="findModal" open={isModalOpen} onCancel={handleCancel}>
+        <div className="findModal" open={isModalOpen} onCancel={handleCancel}>
           <div className="findModal__title">비밀번호 재설정</div>
-          <div className="findModal__util"></div>
           <>
-            <div className="findModal__info">
-              가입시 등록한 이메일을 입력해주세요.
+            <div className="findModal__util">
+              <div className="findModal__info">
+                가입시 등록한 이메일을 입력해주세요.
+              </div>
+              <MoreInput
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              ></MoreInput>
             </div>
-            <MoreInput
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></MoreInput>
           </>
           <MoreButton
             type={"fill"}
@@ -71,7 +72,7 @@ const FindModalComponent = ({ isModalOpen, handleCancel }) => {
           >
             임시번호 전송
           </MoreButton>
-        </Modal>
+        </div>
       )}
     </>
   );

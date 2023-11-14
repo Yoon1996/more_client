@@ -1,6 +1,9 @@
 .recipe_list {
+  width: 100%;
+  height: 100%;
+
   &__wrap {
-    width: 100%;
+    width: 80%;
     margin: 0 auto;
   }
 
@@ -12,6 +15,15 @@
 
   &__list {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__no-recipe-message {
+    font-size: 32px;
+    font-weight: 400;
+    margin-left: 85px;
+    color: var(--more-gray-scale-bd);
+    line-height: 52px;
   }
 }

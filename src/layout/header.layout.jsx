@@ -52,54 +52,63 @@ const HeaderLayout = ({ isMyAccount }) => {
 
   return (
     <header className="header">
-      <div className="header__info">
-        <div className="header__info--group">
-          {user.id ? (
-            <>
-              <div className="header__info--user">
-                <div onClick={openInfoDrop} className="header__info--userName">
-                  {user.name}
+      <div className="header__wrap">
+        <div className="header__logo">
+          <img src="/icon/logo.png" alt="" />
+        </div>
+        <div className="header__title">{user.name}님의 레시피</div>
+        <div className="header__info">
+          <div className="header__info--group">
+            {user.id ? (
+              <>
+                <div className="header__info--user">
+                  <div
+                    onClick={openInfoDrop}
+                    className="header__info--userName"
+                  >
+                    {user.name}
+                  </div>
+                  님 환영합니다
+                  <div className="header__info--drop">
+                    {isVisible ? <InfoDropComponent></InfoDropComponent> : ""}
+                  </div>
                 </div>
-                님 환영합니다
-                <div className="header__info--drop">
-                  {isVisible ? <InfoDropComponent></InfoDropComponent> : ""}
+                <div className="header__info--logout" onClick={logOut}>
+                  로그아웃
                 </div>
-              </div>
-              <div className="header__info--logout" onClick={logOut}>
-                로그아웃
-              </div>
-            </>
-          ) : (
-            <>
-              <div
-                onClick={() => navigate("/login/member_login")}
-                className="header__info--login"
-              >
-                <UserOutlined />
-                로그인
-              </div>
-              <div
-                onClick={() => navigate("/login/member_join")}
-                className="header__info--sign"
-              >
-                회원가입
-              </div>
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                <div
+                  onClick={() => navigate("/login/member_login")}
+                  className="header__info--login"
+                >
+                  <UserOutlined />
+                  로그인
+                </div>
+                <div
+                  onClick={() => navigate("/login/member_join")}
+                  className="header__info--sign"
+                >
+                  회원가입
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className="header__logo">
+      {/* <div className="header__logo">
         <div onClick={goHome} className="header__logo--title">
           모두의 레시피
         </div>
-      </div>
-      {!isMyAccount && (
+      </div> */}
+      {/* {!isMyAccount && (
         <div className="header__nav">
           <ul>
             <li onClick={goCategory}>카테고리관리</li>
           </ul>
         </div>
-      )}
+      )} */}
     </header>
   );
 };

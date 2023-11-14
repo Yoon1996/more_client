@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 
 const recipeInitialState = [
@@ -18,7 +18,7 @@ export const { name, actions, reducer: RecipeReducer } = createSlice({
         },
         setRecipe: (currentRecipes, action) => {
             console.log(action.payload)
-        }
+        },
     }
 })
 
