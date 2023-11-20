@@ -1,0 +1,30 @@
+.dropdown {
+  &__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+  }
+  &__dropdown {
+    margin-left: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__carrot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__menu {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 30;
+    right: 0;
+  }
+}

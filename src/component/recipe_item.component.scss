@@ -1,12 +1,12 @@
 .recipe {
   &__item {
-    width: 365px;
-    height: 400px;
+    width: 400px;
+    height: 365px;
     background-color: rgb(238, 234, 234);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px;
+    margin: 20px;
     border: 1px solid var(--more-gray-scale-bd);
     border-radius: 10px;
   }
