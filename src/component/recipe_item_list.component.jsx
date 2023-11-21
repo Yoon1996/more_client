@@ -46,24 +46,41 @@ const RecipeItemListComponent = () => {
       });
   };
 
+  //북마크 로고 변경
+  const [bookmark, setBookmark] = useState("bookmark-outline");
+
+  const registBookmark = (id) => {
+    console.log(id);
+  };
+
   return (
     <>
       {recipies.map((recipe, index) => (
-        <div
-          onClick={() => showModal(recipe.id)}
-          className="recipeList__item"
-          key={index}
-        >
-          <div className="recipeList__photobox">
+        <div className="recipeList__item" key={index}>
+          <div
+            className="recipeList__photobox"
+            onClick={() => showModal(recipe.id)}
+          >
             <img src="/icon/bread.png" alt="" />
           </div>
           <div className="recipeList__bottom">
             <div className="recipeList__bottom-nameBookmark">
-              <div className="recipeList__bottom-name">{recipe?.name}</div>
+              <div
+                onClick={() => showModal(recipe.id)}
+                className="recipeList__bottom-name"
+              >
+                {recipe?.name}
+              </div>
               <div className="recipeList__bottom-bookmark"></div>
-              <img src="/icon/bookmark.svg" alt="" />
+              <img
+                onClick={() => registBookmark(recipe.id)}
+                src={`/icon/${bookmark}.svg`}
+                alt=""
+              />
             </div>
-            <div className="recipeList__bottom-time">등록일:23.10.10</div>
+            <div className="recipeList__bottom-timeWrap">
+              <div className="recipeList__bottom-time">등록일:23.10.10</div>
+            </div>
           </div>
         </div>
       ))}

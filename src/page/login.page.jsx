@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FindModalComponent from "../component/find_modal.component";
-import { emailCheck, loginCheck, socialLogin } from "../service/user.service";
-import { loginUser } from "../store/user.store";
-import "./login.page.scss";
 import MoreButton from "../component/more-button.component";
 import MoreInput from "../component/more-input.component";
 import SubHeader from "../layout/sub_header.layout";
+import { loginCheck, socialLogin } from "../service/user.service";
+import { loginUser } from "../store/user.store";
+import "./login.page.scss";
 
 const LoginPage = () => {
   const navigate = useNavigate();
