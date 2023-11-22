@@ -1,0 +1,33 @@
+.search-word {
+  &__wrap {
+    position: absolute;
+    top: 260px;
+    left: 560px;
+    width: 641px;
+    height: 151px;
+    padding: 30px 40px;
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 20px 40px;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    border: 1px solid var(--grayscale-cc, #ccc);
+    background: var(--more-basic-white);
+  }
+
+  &__category {
+    display: flex;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--grayscale-ee, #eee);
+    cursor: pointer;
+  }
+
+  &__category:hover {
+    background: var(--primary-light, #ffe99d);
+  }
+}
