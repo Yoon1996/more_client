@@ -34,12 +34,19 @@ const RecipeItemListComponent = () => {
     setIsModalOpen(false);
   };
 
+  const [changeCategory, setChangeCategory] = useState("");
+  const [recipeName, setRecipeName] = useState("");
+  const [ingredients, setIngredients] = useState([]);
+
   //레시피 정보 가져오는 핸들러
   const getRecipes = (id) => {
     getRecipe(id)
       .then((res) => {
-        // console.log("res: ", res);
+        console.log("res??: ", res.data);
         setRecipeId(res.data.id);
+        setRecipeName(res.data.name);
+        setChangeCategory(res.data.categoryName);
+        setIngredients(res.data.Ingredients);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -47,10 +54,10 @@ const RecipeItemListComponent = () => {
   };
 
   //북마크 로고 변경
-  const [bookmark, setBookmark] = useState("bookmark-outline");
+  const [isBookmark, setIsBookmark] = useState(false);
 
   const registBookmark = (id) => {
-    console.log(id);
+    setIsBookmark((current) => !current);
   };
 
   return (
@@ -74,7 +81,11 @@ const RecipeItemListComponent = () => {
               <div className="recipeList__bottom-bookmark"></div>
               <img
                 onClick={() => registBookmark(recipe.id)}
-                src={`/icon/${bookmark}.svg`}
+                src={
+                  isBookmark
+                    ? `/icon/bookmark.svg`
+                    : `/icon/bookmark-outline.svg`
+                }
                 alt=""
               />
             </div>
@@ -89,6 +100,9 @@ const RecipeItemListComponent = () => {
         handleCancel={handleCancel}
         recipes={{
           recipeId,
+          changeCategory,
+          recipeName,
+          ingredients,
         }}
       ></RecipeListModalComponent>
     </>

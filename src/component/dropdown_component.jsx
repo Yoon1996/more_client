@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 import "./dropdown_component.scss";
+import { getRecipeList } from "../service/recipe.service";
+import { useDispatch } from "react-redux";
+import { setRecipes } from "../store/recipe.store";
 
 const DropdownComponent = () => {
+  const dispatch = useDispatch();
   const [category, setCategory] = useState("최신순");
   const [isDrop, setIsDrop] = useState(false);
   const categoryList = ["최신순", "조회순", "자주 본 순"];
@@ -15,6 +19,15 @@ const DropdownComponent = () => {
     const clickedValue = event.target.innerText;
     setCategory(clickedValue);
     setIsDrop(false);
+
+    getRecipeList(clickedValue)
+      .then((res) => {
+        console.log("res: ", res);
+        dispatch(setRecipes(res.data));
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
   };
 
   return (

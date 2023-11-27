@@ -1,68 +1,56 @@
 .recipeList {
   &__item {
-    // width: 400px;
     width: calc(((100% - 80px) / 3));
     height: 365px;
-    background-color: rgb(238, 234, 234);
-    border: 1px solid var(--more-gray-scale-bd);
-    border-radius: 10px;
+    border: 1px solid var(--more-gray-scale-d8);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   &__photobox {
-    width: 100%;
     height: 265px;
-    top: 0;
-    cursor: pointer;
-
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
   }
 
   &__bottom {
-    display: flex;
     width: 100%;
     height: 100px;
-    background-color: var(--more-gray-scale-d8);
-    padding: 10px 20px;
+    display: flex;
+    padding: 18px 34px;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-    border-radius: 0px 0px 8px 8px;
-    border: 1px solid var(--grayscale-cc, #ccc);
-    background: var(--grayscale-d-8, #d8dee4);
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
 
     &-nameBookmark {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    &-time {
-      display: flex;
-      // width: 362px;
-      height: 30px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    &-name {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    &-bookmark {
+      gap: 16px;
     }
 
     &-timeWrap {
       width: 100%;
+      height: 24px;
       display: flex;
-      justify-content: right;
       align-items: center;
+      justify-content: flex-end;
+    }
+
+    &-time {
+    }
+
+    &-name {
+      font-size: 20px;
+    }
+
+    &-bookmark {
     }
 
     &-time {

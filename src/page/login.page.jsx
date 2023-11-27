@@ -1,5 +1,5 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FindModalComponent from "../component/find_modal.component";
@@ -13,11 +13,20 @@ import "./login.page.scss";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const outSide = useRef();
+
+  // 모달창 닫기
+  const cancleModal = (e) => {
+    if (e.target === outSide.current) {
+      setIsModalOpen(false);
+    }
+  };
 
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
 
   const onPwHandler = (e) => {
+    // e.preventdefault();
     setPw(e.target.value);
   };
 
@@ -177,7 +186,15 @@ const LoginPage = () => {
           </MoreButton>
         </div>
       </div>
-      {isModalOpen ? <div className="findModal__dark"></div> : ""}
+      {isModalOpen ? (
+        <div
+          onClick={cancleModal}
+          className="findModal__dark"
+          ref={outSide}
+        ></div>
+      ) : (
+        ""
+      )}
       {isModalOpen ? (
         <FindModalComponent
           isModalOpen={isModalOpen}

@@ -32,12 +32,17 @@ const RecipeListpage = () => {
     setSwitchOn("on");
   };
 
+  //북마크 margin-bottom
+  const bookmarkMargin = {
+    margin: "0px 0px 43px 0px",
+  };
+
   return (
     <>
       <div className="recipe_list">
         <div className="recipe_list__wrap">
           <SearchComponent></SearchComponent>
-          <div>
+          <div style={bookmarkMargin}>
             <BookmarkComponent
               setType={changeBookMark}
               type={switchOn}

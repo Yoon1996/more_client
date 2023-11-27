@@ -14,19 +14,20 @@
 
   &__logo {
     margin-right: 20px;
+    width: 265px;
   }
 
   &__title {
-    font-size: 32px;
+    cursor: pointer;
   }
 
   &__info {
+    // width: 265px;
     display: flex;
-    padding: 0.5rem 5rem;
     align-items: center;
-    gap: 0.5rem;
     align-self: stretch;
     flex-direction: row-reverse;
+    padding-right: 80px;
 
     &--group {
       display: flex;

@@ -1,19 +1,18 @@
 .recipe {
   &__item {
-    width: 400px;
+    width: calc(((100% - 80px) / 3));
     height: 365px;
-    background-color: rgb(238, 234, 234);
+    background-color: var(--more-gray-scale-f6);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px;
-    border: 1px solid var(--more-gray-scale-bd);
+    border: 1px solid var(--more-gray-scale-d8);
     border-radius: 10px;
   }
 
   &__item-add {
     cursor: pointer;
-    fill: var(--more-gray-scale-bd);
+    color: var(--more-gray-scale-d8);
   }
 }
 

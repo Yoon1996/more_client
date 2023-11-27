@@ -12,21 +12,13 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   const [categoryId, setCategoryId] = useState(0);
   const [recipeName, setRecipeName] = useState("");
 
-  const dispatch = useDispatch();
-
-  //레시피 정보 가져오기
   useEffect(() => {
-    getRecipe(recipes.recipeId)
-      .then((res) => {
-        console.log("레시피: ", res);
-        setRecipeName(res.data.name);
-        setChangeCategory(res.data.categoryName);
-        setIngredientList(res.data.Ingredients);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
+    setRecipeName(recipes.recipeName);
+    setChangeCategory(recipes.changeCategory);
+    setIngredientList(recipes.ingredients);
   }, [recipes.recipeId]);
+
+  const dispatch = useDispatch();
 
   //수정 핸들러
   const [isEditMode, setIsEditMode] = useState(false);

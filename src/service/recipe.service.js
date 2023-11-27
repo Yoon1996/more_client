@@ -20,8 +20,8 @@ export const create = (params) => {
 }
 
 //레시피 목록 가져오기
-export const getRecipeList = () => {
-    return axios.get(`${baseUrl}/recipes`)
+export const getRecipeList = (filter) => {
+    return axios.get(`${baseUrl}/recipes?filter=${filter}`)
 }
 
 //레시피 필터링

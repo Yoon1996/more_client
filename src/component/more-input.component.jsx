@@ -1,11 +1,23 @@
 import React from "react";
 import "./more-input.component.scss";
 
-const MoreInput = ({ showCheck, children, className: newName, ...attr }) => {
+const MoreInput = ({
+  showCheck,
+  children,
+  className: newName,
+  showSearchWord,
+  setIsSearch,
+  ...attr
+}) => {
   return (
     <>
       <div className="more-input__wrap">
-        <input className={`more-input ${newName}`} {...attr}>
+        <input
+          className={`more-input ${newName}`}
+          {...attr}
+          // onFocus={() => setIsSearch(true)}
+          // onBlur={() => setIsSearch(false)}
+        >
           {children}
         </input>
         {showCheck ? (

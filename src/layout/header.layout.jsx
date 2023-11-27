@@ -56,7 +56,9 @@ const HeaderLayout = ({ isMyAccount }) => {
         <div className="header__logo">
           <img src="/icon/logo.png" alt="" />
         </div>
-        <div className="header__title">{user.name}님의 레시피</div>
+        <div className="header__title" onClick={() => navigate("/")}>
+          <img src="/icon/logo_typo.png" alt="" />
+        </div>
         <div className="header__info">
           <div className="header__info--group">
             {user.id ? (

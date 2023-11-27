@@ -15,19 +15,4 @@
     border: 1px solid var(--grayscale-cc, #ccc);
     background: var(--more-basic-white);
   }
-
-  &__category {
-    display: flex;
-    padding: 8px 16px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 10px;
-    background: var(--grayscale-ee, #eee);
-    cursor: pointer;
-  }
-
-  &__category:hover {
-    background: var(--primary-light, #ffe99d);
-  }
 }

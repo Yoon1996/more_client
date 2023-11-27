@@ -1,16 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import MoreInput from "./more-input.component";
+import React, { useState } from "react";
 import "./search_component.scss";
-import SearchWordComponent from "./search_word_component";
+import SearchWordComponent from "./search_word.component";
 
 const SearchComponent = () => {
   const [isSearch, setIsSearch] = useState(false);
-  const showSearchWord = () => {
-    setIsSearch(true);
-  };
-  const inputRef = useRef();
+  const showSearchWord = () => {};
 
-  console.log(inputRef.current.focus());
+  const categoryList = ["한식", "양식", "일식", "중식", "야식"];
 
   return (
     <>
@@ -18,18 +14,26 @@ const SearchComponent = () => {
         <div className="search__wrap">
           <div className="search__left">레시피 찾기</div>
           <div className="search__right">
-            <MoreInput
-              onClick={showSearchWord}
-              className="search__input"
+            <div
+              className="search__input-wrap"
+              contentEditable="true"
               placeholder="레시피를 검색해보세요!"
-            ></MoreInput>
+            >
+              <SearchWordComponent></SearchWordComponent>
+              <div className="search__input"></div>
+              {/* <MoreInput
+                setIsSearch={setIsSearch}
+                showSearchWord={showSearchWord}
+                className="search__input"
+                placeholder="레시피를 검색해보세요!"
+              ></MoreInput> */}
+            </div>
             <div className="search__icon">
               <img src="/icon/search.svg" alt="" />
             </div>
           </div>
         </div>
       </div>
-      {isSearch ? <SearchWordComponent></SearchWordComponent> : null}
     </>
   );
 };

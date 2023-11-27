@@ -1,7 +1,8 @@
 import React from "react";
-import "./search_word_component.scss";
+import "./search_wordList_component.scss";
+import SearchWordComponent from "./search_word.component";
 
-const SearchWordComponent = () => {
+const SearchWordListComponent = () => {
   const categoryList = [
     "한식",
     "양식",
@@ -17,7 +18,9 @@ const SearchWordComponent = () => {
       <div className="search-word">
         <div className="search-word__wrap">
           {categoryList.map((category) => (
-            <div className="search-word__category">{category}</div>
+            <SearchWordComponent className="search-word__category">
+              {category}
+            </SearchWordComponent>
           ))}
         </div>
       </div>
@@ -25,4 +28,4 @@ const SearchWordComponent = () => {
   );
 };
 
-export default SearchWordComponent;
+export default SearchWordListComponent;
