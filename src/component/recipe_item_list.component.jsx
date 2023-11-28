@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./recipe_item_list.component.scss";
-import { getRecipe, getRecipeList } from "../service/recipe.service";
 import { useDispatch, useSelector } from "react-redux";
+import { getRecipe, getRecipeList } from "../service/recipe.service";
 import { setRecipes } from "../store/recipe.store";
+import "./recipe_item_list.component.scss";
 import RecipeListModalComponent from "./recipe_list_modal.component";
+import StarButton from "./starButton.component";
 
 const RecipeItemListComponent = () => {
   const dispatch = useDispatch();
@@ -53,17 +54,10 @@ const RecipeItemListComponent = () => {
       });
   };
 
-  //북마크 로고 변경
-  const [isBookmark, setIsBookmark] = useState(false);
-
-  const registBookmark = (id) => {
-    setIsBookmark((current) => !current);
-  };
-
   return (
     <>
-      {recipies.map((recipe, index) => (
-        <div className="recipeList__item" key={index}>
+      {recipies.map((recipe) => (
+        <div className="recipeList__item" key={recipe.id}>
           <div
             className="recipeList__photobox"
             onClick={() => showModal(recipe.id)}
@@ -79,15 +73,7 @@ const RecipeItemListComponent = () => {
                 {recipe?.name}
               </div>
               <div className="recipeList__bottom-bookmark"></div>
-              <img
-                onClick={() => registBookmark(recipe.id)}
-                src={
-                  isBookmark
-                    ? `/icon/bookmark.svg`
-                    : `/icon/bookmark-outline.svg`
-                }
-                alt=""
-              />
+              <StarButton value={recipe.id}></StarButton>
             </div>
             <div className="recipeList__bottom-timeWrap">
               <div className="recipeList__bottom-time">등록일:23.10.10</div>

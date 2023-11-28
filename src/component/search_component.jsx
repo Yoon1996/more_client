@@ -17,6 +17,7 @@ const SearchComponent = () => {
             <div
               className="search__input-wrap"
               contentEditable="true"
+              suppressContentEditableWarning
               placeholder="레시피를 검색해보세요!"
             >
               <SearchWordComponent></SearchWordComponent>

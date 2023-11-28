@@ -40,8 +40,8 @@ const DropdownComponent = () => {
       </div>
       {isDrop ? (
         <ul className="dropdown__menu-wrap">
-          {categoryList.map((category) => (
-            <li className="dropdown__menu" onClick={selectMenu}>
+          {categoryList.map((category, index) => (
+            <li key={index} className="dropdown__menu" onClick={selectMenu}>
               {category}
             </li>
           ))}
