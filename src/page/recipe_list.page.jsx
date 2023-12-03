@@ -9,7 +9,6 @@ import "./recipe_list.page.scss";
 import BookmarkComponent from "../component/bookmark_component";
 
 const RecipeListpage = () => {
-  // const [currentList, setCurrentList] = useState([]);
   const currentRecipes = useSelector((rootState) => rootState.recipe);
   const dispatch = useDispatch();
   useEffect(() => {

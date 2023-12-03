@@ -1,6 +1,6 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.scss';
@@ -8,6 +8,7 @@ import AuthGaurdComponent from './component/auth_gaurd_component';
 import CategoryListpage from './page/category_list.page';
 import JoinPage from './page/join.page';
 import LoginPage from './page/login.page';
+import LoginDonePage from "./page/login_done.page";
 import MyInfoPage from './page/my_info.page';
 import RecipeListpage from './page/recipe_list.page';
 import WithdrawPage from './page/withdraw_page';
@@ -17,7 +18,6 @@ import LoginTemplate from './template/login.template';
 import MainTemplate from './template/main.template';
 import MyAccountTemplate from './template/my-account.template';
 import { clearAccessToken, getAccessToken } from './util/localstorage.util';
-import LoginDonePage from "./page/login_done.page";
 
 function App() {
 
@@ -28,6 +28,7 @@ function App() {
     "926618531398-36t5psht9gd5c2sk9irjdf8vlvltpd22.apps.googleusercontent.com";
 
   useEffect(() => {
+
     const accessToken = getAccessToken();
 
     if (!accessToken) dispatch(userInit({ isInit: true }))

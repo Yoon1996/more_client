@@ -6,8 +6,8 @@ import { env } from "../evnironment/environment"
 const baseUrl = `${env.hosturl}/bookmark`
 
 //북마크 지정
-export const bookmarkCreate = (params) => {
-    return axios.post(`${baseUrl}/save-bookmark`, params)
+export const bookmarkToggle = (params) => {
+    return axios.post(`${baseUrl}/bookmark-toggle`, params)
 }
 
 //북마크 해제

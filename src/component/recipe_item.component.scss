@@ -26,20 +26,36 @@
 }
 
 //모달 폼
+:where(.css-dev-only-do-not-override-14wwjjs).ant-modal .ant-modal-content {
+  padding: 80px 120px;
+}
+
 .modal {
   //모달 안쪽 필드
   &__feild {
-    padding: 20px;
-    width: 100%;
-  }
-
-  //모달 간격 맞추기
-  &__size {
-    margin: 10px 0px;
+    width: 1033px;
+    // height: 682px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 60px;
+    align-self: stretch;
   }
 
   //모달 레시피 이름 필드
+  &__more-input::placeholder {
+    color: var(--more-gray-scale-d8);
+  }
   &__title {
+    width: 736px;
+    height: 72px;
+    font-size: 26px;
+  }
+
+  &__sub-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
   }
 
   &__hint {
@@ -50,33 +66,101 @@
   &__category {
   }
 
-  //모달 재료 전체필드
   &__ingredient {
-    width: 100%;
-    height: 100%;
+    width: 1033px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
+
+    &__list {
+      width: 100%;
+      height: 96px;
+      display: flex;
+      gap: 24px;
+      font-size: 18px;
+    }
+
+    &__list::placeholder {
+    }
 
     &__title {
-      width: 50%;
+      width: 400px;
+      height: 96px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      gap: 12px;
+    }
+
+    &__sub-title {
+      font-size: 18px;
+      font-weight: 600;
     }
 
     &__ea {
+      width: 255px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      gap: 12px;
     }
 
-    &__delete_button {
-      height: 50px;
+    &__unit {
+      width: 206px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      gap: 12px;
+    }
+
+    &__delete {
+      width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      gap: 12px;
+      &__none {
+        height: 28px;
+      }
+
+      &__button {
+        border-radius: 10px;
+        font-weight: 500;
+      }
     }
   }
 
-  //모달 재료 추가 버튼
   &__add {
     width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    border-radius: 9px;
+    border: 1px solid var(--grayscale-d-8, #d8dee4);
+    background: var(--grayscale-f-6, #f6f8fa);
+
+    img {
+      cursor: pointer;
+    }
   }
 
-  //모달 취소 등록 버튼(유틸)
   &__util {
+    width: 100%;
+    height: 64px;
     display: flex;
-    justify-content: center;
+    justify-content: right;
+    gap: 24px;
+  }
+
+  &__util__button {
+    width: 250px;
+    font-size: 24px;
   }
 }

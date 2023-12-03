@@ -10,7 +10,9 @@ const RecipeItemListComponent = () => {
   const dispatch = useDispatch();
   const recipies = useSelector((rootState) => rootState.recipe);
 
-  useEffect(() => {
+  useEffect(() => loadRecipeList(), []);
+
+  const loadRecipeList = () => {
     getRecipeList()
       .then(function (res) {
         dispatch(setRecipes(res.data));
@@ -18,7 +20,7 @@ const RecipeItemListComponent = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  };
 
   const [recipeId, setRecipeId] = useState(0);
 
@@ -73,7 +75,10 @@ const RecipeItemListComponent = () => {
                 {recipe?.name}
               </div>
               <div className="recipeList__bottom-bookmark"></div>
-              <StarButton value={recipe.id}></StarButton>
+              <StarButton
+                recipe={recipe}
+                loadRecipeList={loadRecipeList}
+              ></StarButton>
             </div>
             <div className="recipeList__bottom-timeWrap">
               <div className="recipeList__bottom-time">등록일:23.10.10</div>
