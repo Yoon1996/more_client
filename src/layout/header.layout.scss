@@ -31,19 +31,24 @@
 
     &--group {
       display: flex;
+      gap: 24px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    &--user {
+      display: flex;
+      align-items: center;
+      justify-self: center;
+    }
+
+    &--user-img {
+      cursor: pointer;
     }
 
     &--userName {
-      color: blue;
       display: inline-block;
       font-weight: bold;
-      margin-right: 5px;
-      cursor: pointer;
-    }
-
-    &--logout {
-      cursor: pointer;
-      margin-left: 20px;
     }
 
     &--login {

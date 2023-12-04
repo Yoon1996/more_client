@@ -81,7 +81,16 @@ const RecipeItemListComponent = () => {
               ></StarButton>
             </div>
             <div className="recipeList__bottom-timeWrap">
-              <div className="recipeList__bottom-time">등록일:23.10.10</div>
+              <div className="recipeList__bottom-time">
+                등록일:
+                {recipe?.createdAt
+                  ? new Date(recipe.createdAt).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : ""}
+              </div>
             </div>
           </div>
         </div>

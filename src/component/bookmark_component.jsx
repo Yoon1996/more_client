@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import "./bookmark_component.scss";
 import { Switch } from "antd";
-import DropdownComponent from "./dropdown_component";
-import { bookmarkCreate } from "../service/bookmark.service";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { getRecipeList } from "../service/recipe.service";
-import { useDispatch, useSelector } from "react-redux";
 import { setRecipes } from "../store/recipe.store";
+import "./bookmark_component.scss";
+import DropdownComponent from "./dropdown_component";
 
 const BookmarkComponent = ({ type, setType }) => {
   useEffect(() => {
@@ -13,10 +12,10 @@ const BookmarkComponent = ({ type, setType }) => {
   }, [type]);
 
   const dispatch = useDispatch();
-  const [isSwitch, setisSwitch] = useState(false);
+  const [isSwitch, setIsSwitch] = useState(false);
 
   const getBookmarkRecipes = () => {
-    setisSwitch(true);
+    setIsSwitch(true);
     getRecipeList("북마크")
       .then((res) => {
         console.log("res: ", res.data);
@@ -28,7 +27,7 @@ const BookmarkComponent = ({ type, setType }) => {
   };
 
   const getWholeRecipes = () => {
-    setisSwitch(false);
+    setIsSwitch(false);
     getRecipeList()
       .then((res) => {
         console.log("res: ", res);

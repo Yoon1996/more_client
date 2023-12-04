@@ -45,11 +45,6 @@ const HeaderLayout = ({ isMyAccount }) => {
     setIsVisible(!isVisible);
   };
 
-  //로그아웃
-  const logOut = () => {
-    dispatch(logoutUser());
-  };
-
   return (
     <header className="header">
       <div className="header__wrap">
@@ -64,19 +59,14 @@ const HeaderLayout = ({ isMyAccount }) => {
             {user.id ? (
               <>
                 <div className="header__info--user">
-                  <div
-                    onClick={openInfoDrop}
-                    className="header__info--userName"
-                  >
-                    {user.name}
-                  </div>
-                  님 환영합니다
+                  <div className="header__info--userName">{user.name}</div>님
+                  환영합니다
                   <div className="header__info--drop">
                     {isVisible ? <InfoDropComponent></InfoDropComponent> : ""}
                   </div>
                 </div>
-                <div className="header__info--logout" onClick={logOut}>
-                  로그아웃
+                <div className="header__info--user-img" onClick={openInfoDrop}>
+                  <img src="/icon/header-profile.svg" alt="" />
                 </div>
               </>
             ) : (

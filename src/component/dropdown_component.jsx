@@ -9,7 +9,7 @@ const DropdownComponent = () => {
   const dispatch = useDispatch();
   const [category, setCategory] = useState("최신순");
   const [isDrop, setIsDrop] = useState(false);
-  const categoryList = ["최신순", "조회순", "자주 본 순"];
+  const categoryList = ["최신순", "조회순", "오래된 순"];
 
   const dropDown = () => {
     setIsDrop((isDrop) => !isDrop);

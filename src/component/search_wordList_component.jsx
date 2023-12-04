@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./search_wordList_component.scss";
 import SearchWordComponent from "./search_word.component";
+import { viewCategories } from "../service/category.service";
 
 const SearchWordListComponent = () => {
-  const categoryList = [
-    "한식",
-    "양식",
-    "일식",
-    "중식",
-    "야식",
-    "간식",
-    "제빵",
-    "기타",
-  ];
+  const [categoryList, setCategoryList] = useState([]);
+  useEffect(() => {
+    viewCategories()
+      .then((res) => {
+        console.log("res: ", res.data);
+        setCategoryList(res.data);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
+  }, []);
   return (
     <>
       <div className="search-word">

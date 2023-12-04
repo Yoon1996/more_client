@@ -1,0 +1,26 @@
+.sidebar {
+  width: 242px;
+  height: 174px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid var(--grayscale-d-8, #d8dee4);
+  background: var(--basic-white, #fff);
+
+  &__menu {
+    width: 100%;
+    height: 54px;
+    display: flex;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    align-items: center;
+    transition: all 0.3s;
+  }
+
+  &__menu:hover {
+    background-color: var(--more-primary-light);
+  }
+}

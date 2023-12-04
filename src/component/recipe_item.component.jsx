@@ -1,19 +1,18 @@
-import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Input, Modal, Space } from "antd";
-import React, { useState } from "react";
+import { Modal } from "antd";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { viewCategories } from "../service/category.service";
 import { create } from "../service/recipe.service";
-import "./recipe_item.component.scss";
-import MoreInput from "./more-input.component";
-import SearchWordComponent from "./search_word.component";
 import MoreButton from "./more-button.component";
+import MoreInput from "./more-input.component";
+import "./recipe_item.component.scss";
+import SearchWordComponent from "./search_word.component";
 
 const RecipeItemComponent = () => {
   const [recipeName, setRecipeName] = useState("");
 
   const navigate = useNavigate();
-  const categoryDropItem = useSelector((rootState) => rootState.categoryList);
   const [changeCategory, setChangeCategory] = useState("");
   const [errors, setErrors] = useState({});
 
@@ -27,11 +26,6 @@ const RecipeItemComponent = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  const items = categoryDropItem.map((category, index) => ({
-    label: `${category.name}`,
-    key: `${index}`,
-  }));
 
   //레시피 등록 유효성 검사
   const recipeValidator = () => {
@@ -48,6 +42,25 @@ const RecipeItemComponent = () => {
     return errors;
   };
 
+  const [categoryList, setCategoryList] = useState([]);
+  useEffect(() => {
+    viewCategories()
+      .then((res) => {
+        console.log("res: ", res.data);
+        setCategoryList(res.data);
+        console.log("categoryList: ", categoryList);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
+  }, []);
+
+  const selectMenu = (e) => {
+    const clickedValue = e.target.innerText;
+    console.log("clickedValue: ", clickedValue);
+    setChangeCategory(clickedValue);
+  };
+
   //레시피 등록 이벤트
   const recipeCreate = () => {
     const recipeParam = {
@@ -57,11 +70,6 @@ const RecipeItemComponent = () => {
     };
 
     const errorCheckrRes = recipeValidator(recipeParam);
-
-    if (Object.keys(errorCheckrRes).length) {
-      setErrors(errorCheckrRes);
-      return;
-    }
 
     create(recipeParam)
       .then(function (res) {
@@ -134,7 +142,11 @@ const RecipeItemComponent = () => {
           </div>
           <div className="modal__category modal__size">
             <div className="modal__sub-title">카테고리</div>
-            <SearchWordComponent type={"no_close"}></SearchWordComponent>
+            <SearchWordComponent
+              categoryList={categoryList}
+              type={"no_close"}
+              selectMenu={selectMenu}
+            ></SearchWordComponent>
             <div className="modal__hint">
               {errors?.categoryName?.require ? (
                 <p>{errors?.categoryName?.require}</p>

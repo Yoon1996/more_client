@@ -10,15 +10,15 @@ const MyAccountTemplate = () => {
     <>
       <HeaderLayout isMyAccount={false} />
       <main>
-        <div className="my-account__content">
-          <Row className="main__layout" justify="center">
-            <Col span={4}>
+        <div className="my-account">
+          <div className="my-account__layout">
+            <div className="my-account__sidebar">
               <SidebarComponent></SidebarComponent>
-            </Col>
-            <Col span={20}>
+            </div>
+            <div className="my-account__content">
               <Outlet></Outlet>
-            </Col>
-          </Row>
+            </div>
+          </div>
         </div>
       </main>
     </>

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import PasswordCheckModal from "../component/password_check.modal";
 import { infoUpdate } from "../service/user.service";
 import { updateUser } from "../store/user.store";
-import "./my-account.page.scss";
 import "./my_info.page.scss";
 
 const MyInfoPage = () => {

@@ -23,7 +23,11 @@
   }
 
   &__category:hover {
-    background: var(--primary-light, #ffe99d);
+    background: var(--more-primary-light);
+  }
+
+  &__category.focused {
+    background-color: var(--more-primary-dark);
   }
 
   &__close {

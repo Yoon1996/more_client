@@ -71,11 +71,6 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   //   }
   // };
 
-  const items = categoryDropItem.map((category, index) => ({
-    label: `${category.name}`,
-    key: `${index}`,
-  }));
-
   //재료 추가 핸들러
 
   const [ingredientList, setIngredientList] = useState([
@@ -243,7 +238,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
             </MoreButton>
           </div>
         </div>
-      </Modal>{" "}
+      </Modal>
     </>
   );
 };
