@@ -1,12 +1,20 @@
 .my-account {
+  &__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 70px;
+    font-size: 32px;
+    font-weight: 700;
+  }
   &__layout {
-    width: 80%;
+    width: 70%;
     height: 100%;
     margin: 0 auto;
     display: flex;
     font-display: wrap;
     gap: 60px;
-    padding-top: 150px;
+    padding-top: 100px;
   }
   &__content {
     width: 720px;

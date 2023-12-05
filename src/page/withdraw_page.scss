@@ -1,0 +1,70 @@
+.withdraw {
+  border-radius: 12px;
+  border: 1px solid var(--grayscale-d-8, #d8dee4);
+  background: var(--basic-white, #fff);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 60px;
+
+  &__notice {
+    &__upper {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    &__question {
+      font-size: 28px;
+      font-weight: 500;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    &__ment {
+      display: flex;
+      gap: 12px;
+      font-size: 20px;
+      align-items: center;
+    }
+
+    &__check {
+    }
+
+    &__under {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    &__under-ment {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    &__button {
+      width: 290px;
+      padding: 10px 24px;
+    }
+
+    &__input {
+      padding: 10px 24px;
+      height: 170px;
+      border-radius: 8px;
+      border: 1px solid var(--grayscale-d-8, #d8dee4);
+      background: var(--grayscale-fa, #fafafa);
+    }
+  }
+
+  &__button {
+    margin-top: 180px;
+    display: flex;
+    gap: 24px;
+  }
+}

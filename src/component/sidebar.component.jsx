@@ -1,31 +1,8 @@
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-import { Menu } from "antd";
-import React, { useState, Link } from "react";
-import MyInfoPage from "../page/my_info.page";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./sidebar.component.scss";
 
-function getItem(label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-}
-
-const items = [
-  getItem("내 정보", "/my-account/my_info_page", []),
-  getItem("카테고리 관리", "/my-account/category_list_page", []),
-  getItem("탈퇴하기", "/my-account/withdraw_page", []),
-];
-
-const SidebarComponent = () => {
+const SidebarComponent = ({ changeTitle }) => {
   const navigate = useNavigate();
 
   const goMyinfo = () => {
@@ -43,13 +20,31 @@ const SidebarComponent = () => {
   return (
     <>
       <div className="sidebar">
-        <div onClick={goMyinfo} className="sidebar__menu">
+        <div
+          onClick={(e) => {
+            goMyinfo();
+            changeTitle(e);
+          }}
+          className="sidebar__menu"
+        >
           내 정보
         </div>
-        <div onClick={goCategory} className="sidebar__menu">
+        <div
+          onClick={(e) => {
+            goCategory();
+            changeTitle(e);
+          }}
+          className="sidebar__menu"
+        >
           카테고리 관리
         </div>
-        <div onClick={goWithdraw} className="sidebar__menu">
+        <div
+          onClick={(e) => {
+            goWithdraw();
+            changeTitle(e);
+          }}
+          className="sidebar__menu"
+        >
           회원 탈퇴
         </div>
       </div>

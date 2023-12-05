@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Subject } from "rxjs";
 import MoreButton from "../component/more-button.component";
 import MoreInput from "../component/more-input.component";
+import SubHeader from "../layout/sub_header.layout";
 import { emailCheck, signUp } from "../service/user.service";
 import "./join.page.scss";
-import { env } from "../evnironment/environment";
-import SubHeader from "../layout/sub_header.layout";
 
 const JoinPage = () => {
   const navigate = useNavigate();
