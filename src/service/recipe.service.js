@@ -23,6 +23,10 @@ export const create = (params) => {
 export const getRecipeList = (filter) => {
     return axios.get(`${baseUrl}/recipes?filter=${filter}`)
 }
+//레시피 검색 목록 가져오기
+export const getSearchRecipeList = (search) => {
+    return axios.get(`${baseUrl}/recipes?search=${search}`)
+}
 
 //레시피 필터링
 export const filterRecipe = (categoryId) => {

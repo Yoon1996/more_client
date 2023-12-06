@@ -131,6 +131,16 @@
       &__button {
         border-radius: 10px;
         font-weight: 500;
+        background: var(--more-basic-white);
+        border: 3px solid var(--more-primary-dark);
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      &__button:hover {
+        background: var(--more-primary-light);
+        border: 3px solid var(--more-primary-normal);
       }
     }
   }

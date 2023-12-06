@@ -12,7 +12,28 @@
   padding: 80px 120px;
 }
 
-.modal {
+.recipe-list__modal {
+  //인풋 스타일
+  &__title-input {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--more-gray-scale-d8);
+    background-color: var(--more-gray-scale-fa);
+  }
+  &__title-input:focus {
+    outline: 1px solid var(--more-gray-scale-cc);
+  }
+  &__ingredient__input {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--more-gray-scale-d8);
+    background-color: var(--more-basic-white);
+    width: 100%;
+  }
+  input:focus {
+    outline: 1px solid var(--more-gray-scale-cc);
+  }
+
   //모달 안쪽 필드
   &__feild {
     width: 1033px;
@@ -25,9 +46,7 @@
   }
 
   //모달 레시피 이름 필드
-  &__more-input::placeholder {
-    color: var(--more-gray-scale-d8);
-  }
+
   &__title {
     width: 736px;
     height: 72px;
@@ -46,6 +65,14 @@
 
   //모달 카테고리 필드
   &__category {
+  }
+
+  &__ingredient-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
   }
 
   &__ingredient {
@@ -110,6 +137,16 @@
       &__button {
         border-radius: 10px;
         font-weight: 500;
+        background: var(--more-basic-white);
+        border: 3px solid var(--more-primary-dark);
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      &__button:hover {
+        background: var(--more-primary-light);
+        border: 3px solid var(--more-primary-normal);
       }
     }
   }
@@ -139,7 +176,7 @@
   }
 
   &__util__button {
-    width: 150px;
+    width: 250px;
     font-size: 24px;
   }
 }

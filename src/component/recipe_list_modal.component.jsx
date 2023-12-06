@@ -22,14 +22,6 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
 
   const dispatch = useDispatch();
 
-  //수정 핸들러
-  const [isEditMode, setIsEditMode] = useState(false);
-
-  //수정모드
-  const enableEditMode = () => {
-    setIsEditMode(true);
-  };
-
   //저장모드, params 서버에 전달
   const submit = (id) => {
     const params = {
@@ -39,7 +31,6 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
       ingredientList,
     };
     console.log("params: ", params);
-    setIsEditMode(false);
     editRecipe(id, params)
       .then((res) => {
         console.log(res.data);
@@ -47,29 +38,13 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
           alert("카테고리 입력 바람");
         } else {
           dispatch(setRecipes(res.data));
+          handleCancel();
         }
       })
       .catch((err) => {
         console.log("레시피등록err: ", err);
       });
   };
-
-  //레시피 삭제
-  // const deleteRecipeMode = (id) => {
-  //   if (window.confirm("정말 삭제하시겠습니까?")) {
-  //     deleteRecipe(id)
-  //       .then((res) => {
-  //         dispatch(setRecipes(res.data));
-  //         handleCancel();
-  //       })
-  //       .catch((err) => {
-  //         console.log("err: ", err);
-  //       });
-  //     alert("삭제되었습니다.");
-  //   } else {
-  //     alert("취소되었습니다.");
-  //   }
-  // };
 
   //재료 추가 핸들러
 
@@ -116,115 +91,132 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   return (
     <>
       <Modal
-        className="modal"
+        className="recipe-list__modal"
         width={1273}
         title=""
         open={isModalOpen}
         onCancel={handleCancel}
       >
-        <div className="modal__feild">
-          <div className="modal__title modal__size">
+        <div className="recipe-list__modal__feild">
+          <div className="recipe-list__modal__title recipe-list__modal__size">
             <div>
-              <MoreInput
+              <input
+                className="recipe-list__modal__title-input"
                 type="text"
-                defaultValue={recipeName}
+                value={recipeName}
                 onChange={(e) => setRecipeName(e.target.value)}
-              ></MoreInput>
+              ></input>
             </div>
           </div>
-          <div className="modal__category modal__size">
-            <div className="modal__sub-title">카테고리</div>
-            <SearchWordComponent type={"no_close"}></SearchWordComponent>
+          <div className="recipe-list__modal__category recipe-list__modal__size">
+            <div className="recipe-list__modal__sub-title">카테고리</div>
           </div>
-          {ingredientList.map((ingredient, index) => (
-            <div key={index} className="modal__ingredient__list modal__size">
-              <div className="modal__ingredient__title">
-                <div className="modal__ingredient__sub-title">재료명</div>
-                <MoreInput
-                  className="modal__ingredient__title-input modal__more-input"
-                  type="text"
-                  defaultValue={ingredient.name}
-                  onChange={(e) => ingredientChange(e.target.value, index)}
-                ></MoreInput>
-              </div>
-              <div className="modal__ingredient__ea">
-                <div className="modal__ingredient__sub-title">무게/수량</div>
-                <div>
-                  <MoreInput
+          <div className="recipe-list__modal__ingredient-wrap">
+            <div className="recipe-list__modal__sub-title">재료 리스트</div>
+            {ingredientList.map((ingredient, index) => (
+              <div
+                key={index}
+                className="recipe-list__modal__ingredient__list recipe-list__modal__size"
+              >
+                <div className="recipe-list__modal__ingredient__title">
+                  <div className="recipe-list__modal__ingredient__sub-title">
+                    재료명
+                  </div>
+                  <input
+                    className="recipe-list__modal__ingredient__input recipe-list__modal__more-input"
                     type="text"
-                    defaultValue={ingredient.ea}
-                    onChange={(e) => {
-                      eaChange(e.target.value, index);
-                    }}
-                  ></MoreInput>
+                    defaultValue={ingredient.name}
+                    onChange={(e) => ingredientChange(e.target.value, index)}
+                  ></input>
                 </div>
-              </div>
-              <div className="modal__ingredient__unit">
-                <div className="modal__ingredient__sub-title">단위</div>
+                <div className="recipe-list__modal__ingredient__ea">
+                  <div className="recipe-list__modal__ingredient__sub-title">
+                    무게/수량
+                  </div>
+                  <div>
+                    <input
+                      className="recipe-list__modal__ingredient__input"
+                      type="text"
+                      defaultValue={ingredient.ea}
+                      onChange={(e) => {
+                        eaChange(e.target.value, index);
+                      }}
+                    ></input>
+                  </div>
+                </div>
+                <div className="recipe-list__modal__ingredient__unit">
+                  <div className="recipe-list__modal__ingredient__sub-title">
+                    단위
+                  </div>
 
-                <div>
-                  <MoreInput
-                    type="text"
-                    defaultValue={ingredient.unit}
-                    onChange={(e) => {
-                      unitChange(e.target.value, index);
-                    }}
-                  ></MoreInput>
+                  <div>
+                    <input
+                      className="recipe-list__modal__ingredient__input"
+                      type="text"
+                      defaultValue={ingredient.unit}
+                      onChange={(e) => {
+                        unitChange(e.target.value, index);
+                      }}
+                    ></input>
+                  </div>
+                </div>
+                <div className="recipe-list__modal__ingredient__delete">
+                  <div className="recipe-list__modal__ingredient__delete__none">
+                    &nbsp;
+                  </div>
+                  <button
+                    onClick={() =>
+                      setIngredientList([...ingredientList.slice(1)])
+                    }
+                    className="recipe-list__modal__ingredient__delete__button"
+                  >
+                    삭제
+                  </button>
                 </div>
               </div>
-              <div className="modal__ingredient__delete">
-                <div className="modal__ingredient__delete__none"></div>
-                <MoreButton
-                  type="outline"
-                  className="modal__ingredient__delete__button"
-                >
-                  재료 삭제
-                </MoreButton>
-              </div>
-            </div>
-          ))}
-          <div className="modal__util modal__size">
-            <MoreButton
-              type="outline"
-              className="modal__util__button"
-              onClick={handleCancel}
+            ))}
+            <div
+              className="recipe-list__modal__add modal__size"
+              onClick={() =>
+                setIngredientList([
+                  ...ingredientList,
+                  { name: "", ea: 0, unit: "" },
+                ])
+              }
             >
+              <img src="/icon/add.svg" alt="" />
+            </div>
+          </div>
+          <div className="recipe-list__modal__util modal__size">
+            <button className="modal__util__button" onClick={handleCancel}>
               취소
-            </MoreButton>
-            <MoreButton
-              type="outline"
-              className="modal__util__button"
+            </button>
+            <button
+              className="recipe-list__modal__util__button"
               onClick={() => submit(recipes.recipeId)}
             >
-              저장
-            </MoreButton>
-            <MoreButton
-              type="outline"
-              className="modal__util__button"
+              수정
+            </button>
+            <button
+              className="recipe-list__modal__util__button"
               onClick={() => deleteRecipeMode(recipes.recipeId)}
             >
               삭제
-            </MoreButton>
+            </button>
           </div>
         </div>
       </Modal>
-      {/* <DeleteModal
-        openModal={isDeleteOpen}
-        closeModal={closeModal}
-        id={id}
-        handleCancel={handleCancel}
-      ></DeleteModal> */}
       <Modal
-        className="delete-modal"
+        className="recipe-list__delete-modal"
         width={764}
         open={isDeleteOpen}
         onCancel={closeModal}
       >
-        <div className="delete_modal__inner-feild">
-          <div className="delete_modal__message">
+        <div className="recipe-list__delete_modal__inner-feild">
+          <div className="recipe-list__delete_modal__message">
             레시피를 정말 삭제하시겠어요?
           </div>
-          <div className="delete_modal__button">
+          <div className="recipe-list__delete_modal__button">
             <MoreButton
               onClick={() => {
                 deleteRecipeMode(recipes.recipeId);

@@ -7,16 +7,18 @@ const MoreInput = ({
   className: newName,
   showSearchWord,
   setIsSearch,
+  value,
+  getText,
   ...attr
 }) => {
   return (
     <>
       <div className="more-input__wrap">
         <input
+          onChange={(e) => getText(e)}
+          value={value}
           className={`more-input ${newName}`}
           {...attr}
-          // onFocus={() => setIsSearch(true)}
-          // onBlur={() => setIsSearch(false)}
         >
           {children}
         </input>

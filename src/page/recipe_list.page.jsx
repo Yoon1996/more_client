@@ -61,7 +61,7 @@ const RecipeListpage = () => {
                 <>
                   <RecipeItemComponent></RecipeItemComponent>
                   <div className="recipe_list__no-recipe-message">
-                    <div>아직 동륵된 레시피가 없어요.</div>
+                    <div>아직 등록된 레시피가 없어요.</div>
                     <div>+ 버튼을 눌러 레시피를 등록해보세요.</div>
                   </div>
                 </>

@@ -194,13 +194,15 @@ const RecipeItemComponent = () => {
                   ></MoreInput>
                 </div>
                 <div className="modal__ingredient__delete">
-                  <div className="modal__ingredient__delete__none"></div>
-                  <MoreButton
-                    type="outline"
+                  <div className="modal__ingredient__delete__none">&nbsp;</div>
+                  <button
+                    onClick={() => {
+                      setIngredientList([...ingredientList.slice(1)]);
+                    }}
                     className="modal__ingredient__delete__button"
                   >
                     삭제
-                  </MoreButton>
+                  </button>
                 </div>
               </div>
             ))}
