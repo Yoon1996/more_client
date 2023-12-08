@@ -8,12 +8,14 @@ import MoreButton from "./more-button.component";
 import MoreInput from "./more-input.component";
 import "./recipe_item.component.scss";
 import SearchWordComponent from "./search_word.component";
+import { async } from "rxjs";
+import { sendUrl } from "../service/url.service";
 
 const RecipeItemComponent = () => {
-  const [recipeName, setRecipeName] = useState("");
-
   const navigate = useNavigate();
+  const [recipeName, setRecipeName] = useState("");
   const [changeCategory, setChangeCategory] = useState("");
+  const [imgURL, setImgURL] = useState(null);
   const [errors, setErrors] = useState({});
 
   //모달창 관리
@@ -62,30 +64,37 @@ const RecipeItemComponent = () => {
   };
 
   //레시피 등록 이벤트
-  const recipeCreate = () => {
+  const recipeCreate = async () => {
+    const urlParam = {
+      imgURL: imgURL,
+    };
+    // await sendUrl(urlParam);
+
     const recipeParam = {
       name: recipeName,
       ingredientList,
       categoryName: changeCategory,
     };
 
-    const errorCheckrRes = recipeValidator(recipeParam);
+    // const errorCheckrRes = recipeValidator(recipeParam);
 
-    create(recipeParam)
-      .then(function (res) {
-        console.log("성공이니?", res);
-        setIsModalOpen(false);
-        navigate("/");
-      })
-      .catch(function (error) {
-        console.log("ssserror: ", error);
-        if (error.response.data.statusMessage === "DUPLICATED_NAME") {
-          setErrors({
-            ...errors,
-            name: { require: "동일한 레시피의 이름이 존재합니다." },
-          });
-        }
-      });
+    try {
+      if (ingredientList) {
+        console.log(ingredientList);
+        // const result = await create(recipeParam);
+        // console.log("result: ", result);
+        // setIsModalOpen(false);
+        // navigate("/");
+      }
+    } catch (error) {
+      console.log("ssserror: ", error);
+      if (error.response.data.statusMessage === "DUPLICATED_NAME") {
+        setErrors({
+          ...errors,
+          name: { require: "동일한 레시피의 이름이 존재합니다." },
+        });
+      }
+    }
   };
 
   //재료 추가 핸들러
@@ -140,6 +149,7 @@ const RecipeItemComponent = () => {
               {errors?.name?.require ? <p>{errors?.name?.require}</p> : ""}
             </div>
           </div>
+          <input type="file" onChange={(e) => setImgURL(e.target.files[0])} />
           <div className="modal__category modal__size">
             <div className="modal__sub-title">카테고리</div>
             <SearchWordComponent

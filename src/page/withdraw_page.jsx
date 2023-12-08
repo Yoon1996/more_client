@@ -28,15 +28,15 @@ const WithdrawPage = () => {
       message: reason,
       buttonMessage: buttonMessage,
     };
+
+    if (!isCheck) {
+      setErorrs({ ...errors, require: "유의사항 확인에 동의해주세요." });
+    }
     withDraw(params)
       .then((res) => {
         console.log("res: ", res);
-        if (!isCheck) {
-          setErorrs({ ...errors, require: "유의사항 확인에 동의해주세요." });
-        } else {
-          setErorrs({ ...errors, require: null });
-          navigate("/login/member_login");
-        }
+        setErorrs({ ...errors, require: null });
+        navigate("/login/member_login");
       })
       .catch((err) => {
         console.log("err: ", err);
