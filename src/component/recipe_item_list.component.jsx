@@ -40,6 +40,7 @@ const RecipeItemListComponent = () => {
   const [changeCategory, setChangeCategory] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState([]);
+  const [categoryId, setCategoryId] = useState(null);
 
   //레시피 정보 가져오는 핸들러
   const getRecipes = (id) => {
@@ -50,6 +51,7 @@ const RecipeItemListComponent = () => {
         setRecipeName(res.data.name);
         setChangeCategory(res.data.categoryName);
         setIngredients(res.data.Ingredients);
+        setCategoryId(res.data.categoryId);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -103,6 +105,7 @@ const RecipeItemListComponent = () => {
           changeCategory,
           recipeName,
           ingredients,
+          categoryId,
         }}
       ></RecipeListModalComponent>
     </>

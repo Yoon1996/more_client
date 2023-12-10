@@ -1,6 +1,5 @@
 import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { viewCategories } from "../service/category.service";
 import { create } from "../service/recipe.service";
@@ -8,15 +7,18 @@ import MoreButton from "./more-button.component";
 import MoreInput from "./more-input.component";
 import "./recipe_item.component.scss";
 import SearchWordComponent from "./search_word.component";
-import { async } from "rxjs";
-import { sendUrl } from "../service/url.service";
 
 const RecipeItemComponent = () => {
   const navigate = useNavigate();
   const [recipeName, setRecipeName] = useState("");
   const [changeCategory, setChangeCategory] = useState("");
   const [imgURL, setImgURL] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [nameErrors, setNameErrors] = useState({});
+  const [categoryErrors, setCategoryErrors] = useState({});
+  const [ingErrors, setIngErrors] = useState({});
+
+  //정규식
+  var numCheck = /\d/;
 
   //모달창 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,73 +31,18 @@ const RecipeItemComponent = () => {
     setIsModalOpen(false);
   };
 
-  //레시피 등록 유효성 검사
-  const recipeValidator = () => {
-    const errors = {};
-
-    if (!recipeName) {
-      errors.name = { require: "레시피 이름을 입력해주세요." };
-    }
-
-    if (!changeCategory) {
-      errors.categoryName = { require: "카테고리를 선택해주세요." };
-    }
-
-    return errors;
-  };
-
+  //카테고리 정보 가져오기
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
     viewCategories()
       .then((res) => {
-        console.log("res: ", res.data);
+        // console.log("res: ", res.data);
         setCategoryList(res.data);
-        console.log("categoryList: ", categoryList);
       })
       .catch((err) => {
         console.log("err: ", err);
       });
   }, []);
-
-  const selectMenu = (e) => {
-    const clickedValue = e.target.innerText;
-    console.log("clickedValue: ", clickedValue);
-    setChangeCategory(clickedValue);
-  };
-
-  //레시피 등록 이벤트
-  const recipeCreate = async () => {
-    const urlParam = {
-      imgURL: imgURL,
-    };
-    // await sendUrl(urlParam);
-
-    const recipeParam = {
-      name: recipeName,
-      ingredientList,
-      categoryName: changeCategory,
-    };
-
-    // const errorCheckrRes = recipeValidator(recipeParam);
-
-    try {
-      if (ingredientList) {
-        console.log(ingredientList);
-        // const result = await create(recipeParam);
-        // console.log("result: ", result);
-        // setIsModalOpen(false);
-        // navigate("/");
-      }
-    } catch (error) {
-      console.log("ssserror: ", error);
-      if (error.response.data.statusMessage === "DUPLICATED_NAME") {
-        setErrors({
-          ...errors,
-          name: { require: "동일한 레시피의 이름이 존재합니다." },
-        });
-      }
-    }
-  };
 
   //재료 추가 핸들러
 
@@ -116,6 +63,108 @@ const RecipeItemComponent = () => {
   const unitChange = (value, index) => {
     ingredientList[index].unit = value;
     setIngredientList([...ingredientList]);
+  };
+
+  const selectMenu = (e) => {
+    const clickedValue = e.target.innerText;
+    console.log("clickedValue: ", clickedValue);
+    setChangeCategory(clickedValue);
+  };
+
+  //이름 빈칸체크
+  const nameCheck = () => {
+    if (!recipeName) {
+      setNameErrors({
+        ...nameErrors,
+        name: { require: "레시피 이름을 입력해주세요!" },
+      });
+    } else {
+      setNameErrors({
+        ...nameErrors,
+        name: null,
+      });
+    }
+  };
+
+  // 카테고리 체크
+  const categoryCheck = () => {
+    if (changeCategory.length > 0) {
+      setCategoryErrors({
+        ...categoryErrors,
+        category: null,
+      });
+    } else {
+      setCategoryErrors({
+        ...categoryErrors,
+        category: { select: "카테고리를 선택해주세요!" },
+      });
+    }
+  };
+
+  //ingredient 빈칸 체크
+  const ingredientfound = ingredientList.find((ingredient) => {
+    if (!ingredient.name || !ingredient.ea || !ingredient.unit) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  const ingredientCheck = () => {
+    if (!ingredientfound) {
+      setIngErrors({
+        ...ingErrors,
+        ingredient: { blank: "재료명, 무게/수량, 단위를 모두 기입해주세요!" },
+      });
+    } else {
+      if (!numCheck.test(ingredientList.ea)) {
+        setIngErrors({
+          ...ingErrors,
+          ingredient: { pleaseNum: "무게/수량칸은 숫자만 기입해주세요." },
+        });
+      }
+      setIngErrors({
+        ...ingErrors,
+        ingredient: null,
+      });
+    }
+  };
+
+  //레시피 등록 이벤트
+  const recipeCreate = async () => {
+    const urlParam = {
+      imgURL: imgURL,
+    };
+    // await sendUrl(urlParam);
+    const recipeParam = {
+      name: recipeName,
+      ingredientList,
+      categoryName: changeCategory,
+    };
+    nameCheck();
+    categoryCheck();
+    ingredientCheck();
+
+    try {
+      if (
+        !nameErrors?.name?.require &&
+        !categoryErrors?.category?.select &&
+        !ingErrors?.ingredient?.blank
+      ) {
+        const result = await create(recipeParam);
+        console.log("result: ", result);
+        setIsModalOpen(false);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      if (error.response.data.statusMessage === "DUPLICATED_NAME") {
+        setNameErrors({
+          ...nameErrors,
+          name: { require: "동일한 레시피의 이름이 존재합니다." },
+        });
+      }
+    }
   };
 
   return (
@@ -146,27 +195,46 @@ const RecipeItemComponent = () => {
               className="modal__more-input"
             ></MoreInput>
             <div className="modal__hint">
-              {errors?.name?.require ? <p>{errors?.name?.require}</p> : ""}
-            </div>
-          </div>
-          <input type="file" onChange={(e) => setImgURL(e.target.files[0])} />
-          <div className="modal__category modal__size">
-            <div className="modal__sub-title">카테고리</div>
-            <SearchWordComponent
-              categoryList={categoryList}
-              type={"no_close"}
-              selectMenu={selectMenu}
-            ></SearchWordComponent>
-            <div className="modal__hint">
-              {errors?.categoryName?.require ? (
-                <p>{errors?.categoryName?.require}</p>
+              {nameErrors?.name?.require ? (
+                <p>{nameErrors?.name?.require}</p>
               ) : (
                 ""
               )}
             </div>
           </div>
+          <input type="file" onChange={(e) => setImgURL(e.target.files[0])} />
+          <div className="modal__category modal__size">
+            <div className="modal__category__with-hint">
+              <div className="modal__sub-title">카테고리</div>
+              <div className="modal__hint">
+                {categoryErrors?.category?.select ? (
+                  <div>{categoryErrors?.category?.select}</div>
+                ) : null}
+              </div>
+            </div>
+            <SearchWordComponent
+              editMode={false}
+              categoryList={categoryList}
+              type={"no_close"}
+              selectMenu={selectMenu}
+            ></SearchWordComponent>
+          </div>
           <div className="modal__ingredient modal__size">
-            <div className="modal__sub-title">재료 리스트</div>
+            <div className="modal__with-hint">
+              <div className="modal__sub-title">재료 리스트</div>
+              <div className="modal__hint">
+                {ingErrors?.ingredient?.blank ? (
+                  <div>{ingErrors?.ingredient?.blank}</div>
+                ) : (
+                  ""
+                )}
+                {ingErrors?.ingredient?.pleaseNum ? (
+                  <div>{ingErrors?.ingredient?.pleaseNum}</div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
             {ingredientList.map((ingredient, index) => (
               <div key={index} className="modal__ingredient__list modal__size">
                 <div className="modal__ingredient__title">

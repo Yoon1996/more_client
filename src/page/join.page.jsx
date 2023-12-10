@@ -214,7 +214,7 @@ const JoinPage = () => {
               ></MoreInput>
               <div className="hint">
                 {errors?.password?.require ? (
-                  <p>{errors.Password.require}</p>
+                  <p>{errors.password.require}</p>
                 ) : (
                   ""
                 )}

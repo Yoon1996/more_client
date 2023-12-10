@@ -4,52 +4,69 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteRecipe, editRecipe } from "../service/recipe.service";
 import { setRecipes } from "../store/recipe.store";
 import MoreButton from "./more-button.component";
-import MoreInput from "./more-input.component";
 import "./recipe_list_modal.component.scss";
 import SearchWordComponent from "./search_word.component";
 
 const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
-  const categoryDropItem = useSelector((rootState) => rootState.categoryList);
   const [changeCategory, setChangeCategory] = useState("");
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState(null);
   const [recipeName, setRecipeName] = useState("");
+  const [nameErrors, setNameErrors] = useState({});
+  const [categoryErrors, setCategoryErrors] = useState({});
+  const [ingErrors, setIngErrors] = useState({});
+  const [isChangeCategory, setIsChangeCategory] = useState(false);
+
+  //정규식
+  var numCheck = /\d/;
 
   useEffect(() => {
     setRecipeName(recipes.recipeName);
     setChangeCategory(recipes.changeCategory);
     setIngredientList(recipes.ingredients);
-  }, [recipes.recipeId]);
+    setCategoryId(recipes.categoryId);
+    console.log(recipes);
+  }, []);
 
   const dispatch = useDispatch();
 
-  //저장모드, params 서버에 전달
-  const submit = (id) => {
-    const params = {
-      recipeName,
-      categoryName: changeCategory,
-      categoryId,
-      ingredientList,
-    };
-    console.log("params: ", params);
-    editRecipe(id, params)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.isCategoryEmpty) {
-          alert("카테고리 입력 바람");
-        } else {
-          dispatch(setRecipes(res.data));
-          handleCancel();
-        }
-      })
-      .catch((err) => {
-        console.log("레시피등록err: ", err);
+  //이름 빈칸체크
+  const nameCheck = () => {
+    if (!recipeName) {
+      setNameErrors({
+        ...nameErrors,
+        name: { require: "레시피 이름을 입력해주세요!" },
       });
+    } else {
+      setNameErrors({
+        ...nameErrors,
+        name: null,
+      });
+    }
+  };
+
+  // 카테고리 체크
+  const categoryCheck = () => {
+    if (changeCategory.length > 0) {
+      setCategoryErrors({
+        ...categoryErrors,
+        category: null,
+      });
+    } else {
+      setCategoryErrors({
+        ...categoryErrors,
+        category: { select: "카테고리를 선택해주세요!" },
+      });
+    }
+  };
+
+  //카테고리 변경 컴포넌트 보여주기
+  const categoryChangeHandler = () => {
+    setIsChangeCategory(true);
   };
 
   //재료 추가 핸들러
-
   const [ingredientList, setIngredientList] = useState([
-    { name: "", ea: 0, unit: "" },
+    { name: "", ea: "", unit: "" },
   ]);
 
   const ingredientChange = (value, index) => {
@@ -65,6 +82,71 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   const unitChange = (value, index) => {
     ingredientList[index].unit = value;
     setIngredientList([...ingredientList]);
+  };
+
+  //ingredient 빈칸 체크
+  const ingredientfound = ingredientList.find((ingredient) => {
+    if (!ingredient.name || !ingredient.ea || !ingredient.unit) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  const ingredientCheck = () => {
+    if (!ingredientfound) {
+      setIngErrors({
+        ...ingErrors,
+        ingredient: { blank: "재료명, 무게/수량, 단위를 모두 기입해주세요!" },
+      });
+    } else {
+      if (!numCheck.test(ingredientList.ea)) {
+        setIngErrors({
+          ...ingErrors,
+          ingredient: { pleaseNum: "무게/수량칸은 숫자만 기입해주세요." },
+        });
+      }
+      setIngErrors({
+        ...ingErrors,
+        ingredient: null,
+      });
+    }
+  };
+
+  //저장모드, params 서버에 전달
+  const submit = async (id) => {
+    const recipeParam = {
+      recipeId: id,
+      recipeName,
+      categoryName: changeCategory,
+      categoryId,
+      ingredientList,
+    };
+    console.log("recipeParam: ", recipeParam);
+    nameCheck();
+    categoryCheck();
+    ingredientCheck();
+
+    try {
+      if (
+        !nameErrors?.name?.require &&
+        !categoryErrors?.category?.select &&
+        !ingErrors?.ingredient?.blank
+      ) {
+        const result = await editRecipe(id, recipeParam);
+        console.log("result: ", result);
+        dispatch(setRecipes(result.data));
+        handleCancel();
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  const selectMenu = (e) => {
+    const clickedValue = e.target.innerText;
+    console.log("clickedValue: ", clickedValue);
+    setChangeCategory(clickedValue);
   };
 
   //삭제 메세지 모달 핸들러
@@ -103,17 +185,63 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
               <input
                 className="recipe-list__modal__title-input"
                 type="text"
-                value={recipeName}
+                value={recipes.recipeName}
                 onChange={(e) => setRecipeName(e.target.value)}
               ></input>
+              <div className="recipe-list__modal__hint">
+                {nameErrors?.name?.require ? (
+                  <p>{nameErrors?.name?.require}</p>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
           <div className="recipe-list__modal__category recipe-list__modal__size">
-            <div className="recipe-list__modal__sub-title">카테고리</div>
+            <div className="recipe-list__modal__category__with-button">
+              <div className="recipe-list__modal__sub-title">카테고리</div>
+              <div
+                className="recipe-list__modal__category__change-bt"
+                onClick={categoryChangeHandler}
+              >
+                카테고리 변경하기
+              </div>
+            </div>
+            <div className="recipe-list__modal__hint">
+              {categoryErrors?.category?.select ? (
+                <div>{categoryErrors?.category?.select}</div>
+              ) : null}
+            </div>
+            {isChangeCategory ? (
+              <SearchWordComponent
+                editMode={true}
+                checked={recipes.categoryId}
+                type={"no_close"}
+                selectMenu={selectMenu}
+              ></SearchWordComponent>
+            ) : (
+              <div className="recipe-list__modal__category-menu">
+                {recipes.changeCategory}
+              </div>
+            )}
           </div>
           <div className="recipe-list__modal__ingredient-wrap">
-            <div className="recipe-list__modal__sub-title">재료 리스트</div>
-            {ingredientList.map((ingredient, index) => (
+            <div className="recipe-list__modal__with-hint">
+              <div className="recipe-list__modal__sub-title">재료 리스트</div>
+              <div className="recipe-list__modal__hint">
+                {ingErrors?.ingredient?.blank ? (
+                  <div>{ingErrors?.ingredient?.blank}</div>
+                ) : (
+                  ""
+                )}
+                {ingErrors?.ingredient?.pleaseNum ? (
+                  <div>{ingErrors?.ingredient?.pleaseNum}</div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+            {recipes.ingredients.map((ingredient, index) => (
               <div
                 key={index}
                 className="recipe-list__modal__ingredient__list recipe-list__modal__size"
@@ -188,7 +316,10 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
             </div>
           </div>
           <div className="recipe-list__modal__util modal__size">
-            <button className="modal__util__button" onClick={handleCancel}>
+            <button
+              className="recipe-list__modal__util__button"
+              onClick={handleCancel}
+            >
               취소
             </button>
             <button

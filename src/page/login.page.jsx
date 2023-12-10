@@ -89,9 +89,6 @@ const LoginPage = () => {
   //모달창 보이기
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //모달창 뒷배경
-  const [isDark, setIsDark] = useState(false);
-
   const showFindModal = () => {
     setIsModalOpen(true);
   };

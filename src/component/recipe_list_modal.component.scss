@@ -54,7 +54,7 @@
   }
 
   &__sub-title {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     font-size: 20px;
     font-weight: 700;
   }
@@ -65,6 +65,38 @@
 
   //모달 카테고리 필드
   &__category {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__with-button {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    &__change-bt {
+      cursor: pointer;
+      background: var(--more-basic-white);
+      border-radius: 8px;
+      transition: all 0.3s;
+      padding: 2px;
+    }
+
+    &__change-bt:hover {
+      background: var(--more-primary-light);
+    }
+  }
+
+  &__category-menu {
+    display: flex;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--grayscale-ee, #eee);
+    font-size: 26px;
   }
 
   &__ingredient-wrap {
@@ -178,5 +210,19 @@
   &__util__button {
     width: 250px;
     font-size: 24px;
+    background: var(--more-basic-white);
+    border: 3px solid var(--more-primary-dark);
+    border-radius: 30px;
+    cursor: pointer;
+  }
+
+  &__util__button:hover {
+    background: var(--more-primary-light);
+    border: 3px solid var(--more-primary-normal);
+  }
+
+  &__util__button:focus {
+    background: var(--more-primary-light);
+    border: 3px solid var(--more-primary-dark);
   }
 }
