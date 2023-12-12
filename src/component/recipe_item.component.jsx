@@ -29,8 +29,12 @@ const RecipeItemComponent = () => {
   //모달창 닫기
   const handleCancel = () => {
     setIsModalOpen(false);
+    setRecipeName(``);
+    setChangeCategory(``);
+    setIngredientList([{ name: "", ea: "", unit: "" }]);
   };
 
+  console.log(recipeName);
   //카테고리 정보 가져오기
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
@@ -187,6 +191,7 @@ const RecipeItemComponent = () => {
         <div className="modal__feild">
           <div className="modal__title modal__size">
             <MoreInput
+              value={recipeName}
               type="text"
               onChange={(e) => {
                 setRecipeName(e.target.value);
@@ -289,7 +294,7 @@ const RecipeItemComponent = () => {
               onClick={() =>
                 setIngredientList([
                   ...ingredientList,
-                  { name: "", ea: 0, unit: "" },
+                  { name: "", ea: "", unit: "" },
                 ])
               }
             >

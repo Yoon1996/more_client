@@ -32,7 +32,7 @@ const RecipeItemListComponent = () => {
     if (id) getRecipes(id);
   };
 
-  //모달창 닫기
+  // 모달창 닫기
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -46,7 +46,7 @@ const RecipeItemListComponent = () => {
   const getRecipes = (id) => {
     getRecipe(id)
       .then((res) => {
-        console.log("res??: ", res.data);
+        // console.log("res??: ", res.data);
         setRecipeId(res.data.id);
         setRecipeName(res.data.name);
         setChangeCategory(res.data.categoryName);
