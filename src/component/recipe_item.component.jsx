@@ -1,21 +1,32 @@
 import { Modal } from "antd";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { viewCategories } from "../service/category.service";
 import { create } from "../service/recipe.service";
+import { sendUrl } from "../service/url.service";
+import { setRecipes } from "../store/recipe.store";
 import MoreButton from "./more-button.component";
 import MoreInput from "./more-input.component";
 import "./recipe_item.component.scss";
 import SearchWordComponent from "./search_word.component";
+import userEvent from "@testing-library/user-event";
+import { async } from "rxjs";
 
 const RecipeItemComponent = () => {
-  const navigate = useNavigate();
   const [recipeName, setRecipeName] = useState("");
   const [changeCategory, setChangeCategory] = useState("");
-  const [imgURL, setImgURL] = useState(null);
+  const [categoryId, setCategoryId] = useState(null);
   const [nameErrors, setNameErrors] = useState({});
   const [categoryErrors, setCategoryErrors] = useState({});
   const [ingErrors, setIngErrors] = useState({});
+  const [selectedFile, setSelctedFile] = useState();
+  const [sendedUrl, setSendedUrl] = useState();
+  const dispatch = useDispatch();
+  const instance = axios.create({
+    headers: null,
+  });
+  const fileInput = useRef();
 
   //정규식
   var numCheck = /\d/;
@@ -32,15 +43,48 @@ const RecipeItemComponent = () => {
     setRecipeName(``);
     setChangeCategory(``);
     setIngredientList([{ name: "", ea: "", unit: "" }]);
+    setNameErrors(null);
+    setCategoryErrors(null);
+    setIngErrors(null);
+    fileInput.current.value = null;
   };
 
-  console.log(recipeName);
+  //파일 등록
+  const handleFileChange = (e) => {
+    setSelctedFile(e.target.files[0]);
+  };
+
+  const uploadImageToS3 = async (url, file) => {
+    try {
+      const res = await instance.put(url, file);
+      const urlData = res.config.url;
+      const newUrl = new URL(urlData);
+      const unsignedUrl = `${newUrl.origin}${newUrl.pathname}`;
+      setSendedUrl(unsignedUrl);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+  // console.log(sendedUrl);
+
+  const uploadFile = async () => {
+    try {
+      const result = await sendUrl({ filename: selectedFile.name });
+      // console.log("result: ", result);
+      const presignedUrl = result.data;
+      // console.log("presignedUrl: ", presignedUrl);
+      uploadImageToS3(presignedUrl, selectedFile);
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  };
+
   //카테고리 정보 가져오기
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
     viewCategories()
       .then((res) => {
-        // console.log("res: ", res.data);
+        // console.log("category_res: ", res.data);
         setCategoryList(res.data);
       })
       .catch((err) => {
@@ -49,7 +93,6 @@ const RecipeItemComponent = () => {
   }, []);
 
   //재료 추가 핸들러
-
   const [ingredientList, setIngredientList] = useState([
     { name: "", ea: "", unit: "" },
   ]);
@@ -71,7 +114,6 @@ const RecipeItemComponent = () => {
 
   const selectMenu = (e) => {
     const clickedValue = e.target.innerText;
-    console.log("clickedValue: ", clickedValue);
     setChangeCategory(clickedValue);
   };
 
@@ -136,37 +178,49 @@ const RecipeItemComponent = () => {
 
   //레시피 등록 이벤트
   const recipeCreate = async () => {
-    const urlParam = {
-      imgURL: imgURL,
-    };
-    // await sendUrl(urlParam);
-    const recipeParam = {
-      name: recipeName,
-      ingredientList,
-      categoryName: changeCategory,
-    };
-    nameCheck();
-    categoryCheck();
-    ingredientCheck();
-
-    try {
+    if (!recipeName && !changeCategory) {
+      nameCheck();
+      categoryCheck();
+      ingredientCheck();
+    } else {
+      nameCheck();
+      categoryCheck();
+      ingredientCheck();
       if (
         !nameErrors?.name?.require &&
         !categoryErrors?.category?.select &&
         !ingErrors?.ingredient?.blank
       ) {
-        const result = await create(recipeParam);
-        console.log("result: ", result);
-        setIsModalOpen(false);
-        navigate("/");
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      if (error.response.data.statusMessage === "DUPLICATED_NAME") {
-        setNameErrors({
-          ...nameErrors,
-          name: { require: "동일한 레시피의 이름이 존재합니다." },
-        });
+        uploadFile();
+        const recipeParam = {
+          name: recipeName,
+          ingredientList,
+          categoryName: changeCategory,
+          url: sendedUrl,
+        };
+        try {
+          console.log("recipeParam.url: ", recipeParam.url);
+          const result = await create(recipeParam);
+          dispatch(setRecipes(result.data));
+          setIsModalOpen(false);
+          setRecipeName("");
+          setChangeCategory("");
+          fileInput.current.value = null;
+          setIngredientList([{ name: "", ea: "", unit: "" }]);
+        } catch (error) {
+          if (error.response.data.statusMessage === "ALL_EMPTY") {
+          } else if (error.response.data.statusMessage === "DUPLICATED_NAME") {
+            setNameErrors({
+              ...nameErrors,
+              name: { require: "동일한 레시피의 이름이 존재합니다." },
+            });
+          } else {
+            setNameErrors({
+              ...nameErrors,
+              name: null,
+            });
+          }
+        }
       }
     }
   };
@@ -207,7 +261,7 @@ const RecipeItemComponent = () => {
               )}
             </div>
           </div>
-          <input type="file" onChange={(e) => setImgURL(e.target.files[0])} />
+          <input type="file" ref={fileInput} onChange={handleFileChange} />
           <div className="modal__category modal__size">
             <div className="modal__category__with-hint">
               <div className="modal__sub-title">카테고리</div>

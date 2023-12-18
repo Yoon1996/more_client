@@ -1,12 +1,13 @@
 import { Modal } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deleteRecipe, editRecipe, getRecipe } from "../service/recipe.service";
+import { sendUrl } from "../service/url.service";
 import { setRecipes } from "../store/recipe.store";
 import MoreButton from "./more-button.component";
 import "./recipe_list_modal.component.scss";
 import SearchWordComponent from "./search_word.component";
-import { async } from "rxjs";
 
 const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   const [recipeName, setRecipeName] = useState(recipes.recipeName);
@@ -18,7 +19,13 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   const [ingErrors, setIngErrors] = useState({});
   const [isChangeCategory, setIsChangeCategory] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [url, setUrl] = useState(recipes.url);
   const dispatch = useDispatch();
+  const [selectedFile, setSelctedFile] = useState(null);
+  const [sendedUrl, setSendedUrl] = useState(null);
+  const instance = axios.create({
+    headers: null,
+  });
 
   //정규식
   var numCheck = /\d/;
@@ -33,11 +40,47 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
         const RecipeIngredientId = res.data.Ingredients.map((item) => item.id);
         setIngredientId(RecipeIngredientId);
         setIngredientList(res.data.Ingredients);
+        setUrl(res.data.url);
       })
       .catch((err) => {
         console.log("err: ", err);
       });
   }, [recipes.recipeId, isModalOpen, handleCancel]);
+  console.log(recipes.url);
+
+  //파일 등록
+  const handleFileChange = (e) => {
+    setSelctedFile(e.target.files[0]);
+  };
+
+  const uploadImageToS3 = (url, file) => {
+    instance
+      .put(url, file)
+      .then((res) => {
+        // console.log("res: ", res);
+        const urlData = res.config.url;
+        const question = [...urlData].findIndex((data) => data === "?");
+        setSendedUrl([...urlData].splice(0, question).join(""));
+        // console.log("question: ", question);
+        // 스프레드 연산자로 감싸고 물음표값의 인덱스를 찾는다.
+        // splice 로 물음표인덱스부터 url의 전체 길이에서 물음표가 있는 길이까지 자른다.
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
+  };
+
+  const uploadFile = async () => {
+    try {
+      const result = await sendUrl({ filename: selectedFile.name });
+      // console.log("result: ", result);
+      const presignedUrl = result.data;
+      // console.log("presignedUrl: ", presignedUrl);
+      uploadImageToS3(presignedUrl, selectedFile);
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  };
 
   //이름 빈칸체크
   const nameCheck = () => {
@@ -118,6 +161,12 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
     }
   };
 
+  const checkHandler = () => {
+    nameCheck();
+    categoryCheck();
+    ingredientCheck();
+  };
+
   //수정모드로 전환
   const editMode = () => {
     setIsEditMode(true);
@@ -132,27 +181,32 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
       categoryName: changeCategory,
       categoryId: recipes.categoryId,
       ingredientList,
+      url: sendedUrl,
     };
-    console.log("recipeParam: ", recipeParam);
-    nameCheck();
-    categoryCheck();
-    ingredientCheck();
 
-    try {
+    if (!recipeName && !changeCategory) {
+      checkHandler();
+    } else if (!recipeName || !changeCategory) {
+      checkHandler();
+    } else {
+      checkHandler();
       if (
         !nameErrors?.name?.require &&
         !categoryErrors?.category?.select &&
         !ingErrors?.ingredient?.blank
       ) {
-        const result = await editRecipe(id, recipeParam);
-        console.log("수정result: ", result);
-        dispatch(setRecipes(result.data));
-        setIsEditMode(false);
-        setIsChangeCategory(false);
-        handleCancel();
+        uploadFile();
+        try {
+          const result = await editRecipe(id, recipeParam);
+          console.log("수정result: ", result);
+          dispatch(setRecipes(result.data));
+          setIsEditMode(false);
+          setIsChangeCategory(false);
+          // handleCancel();
+        } catch (error) {
+          console.log("error: ", error);
+        }
       }
-    } catch (error) {
-      console.log("error: ", error);
     }
   };
 
@@ -160,6 +214,11 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
     handleCancel();
     setIsEditMode(false);
     setIsChangeCategory(false);
+    setRecipeName(recipes.recipeName);
+    setChangeCategory(recipes.changeCategory);
+    setNameErrors(null);
+    setCategoryErrors(null);
+    setIngErrors(null);
   };
 
   const selectMenu = (e) => {
@@ -210,22 +269,40 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
             ) : (
               <div className="recipe-list__modal__title">{recipeName}</div>
             )}
-            <div className="recipe-list__modal__hint">
-              {nameErrors?.name?.require ? (
-                <p>{nameErrors?.name?.require}</p>
-              ) : (
-                ""
-              )}
-            </div>
+            {isEditMode ? (
+              <div className="recipe-list__modal__hint">
+                {nameErrors?.name?.require ? (
+                  <p>{nameErrors?.name?.require}</p>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          {isEditMode ? <input type="file" /> : <div>123</div>}
+          {isEditMode ? (
+            <input type="file" onChange={handleFileChange} />
+          ) : (
+            <div className="recipe-list__modal__image">
+              <img
+                src={url}
+                alt=""
+                style={{ maxWidth: "100%", maxHeight: "400px" }}
+              />
+            </div>
+          )}
           <div className="recipe-list__modal__category recipe-list__modal__size">
             <div className="recipe-list__modal__sub-title">카테고리</div>
-            <div className="recipe-list__modal__hint">
-              {categoryErrors?.category?.select ? (
-                <div>{categoryErrors?.category?.select}</div>
-              ) : null}
-            </div>
+            {isEditMode ? (
+              <div className="recipe-list__modal__hint">
+                {categoryErrors?.category?.select ? (
+                  <div>{categoryErrors?.category?.select}</div>
+                ) : null}
+              </div>
+            ) : (
+              ""
+            )}
             {isChangeCategory ? (
               <SearchWordComponent
                 editMode={true}
@@ -242,18 +319,22 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
           <div className="recipe-list__modal__ingredient modal__size">
             <div className="recipe-list__modal__with-hint">
               <div className="recipe-list__modal__sub-title">재료 리스트</div>
-              <div className="recipe-list__modal__hint">
-                {ingErrors?.ingredient?.blank ? (
-                  <div>{ingErrors?.ingredient?.blank}</div>
-                ) : (
-                  ""
-                )}
-                {ingErrors?.ingredient?.pleaseNum ? (
-                  <div>{ingErrors?.ingredient?.pleaseNum}</div>
-                ) : (
-                  ""
-                )}
-              </div>
+              {isEditMode ? (
+                <div className="recipe-list__modal__hint">
+                  {ingErrors?.ingredient?.blank ? (
+                    <div>{ingErrors?.ingredient?.blank}</div>
+                  ) : (
+                    ""
+                  )}
+                  {ingErrors?.ingredient?.pleaseNum ? (
+                    <div>{ingErrors?.ingredient?.pleaseNum}</div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
             </div>
             {ingredientList.map((ingredient, index) => (
               <div

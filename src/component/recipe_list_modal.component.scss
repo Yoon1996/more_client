@@ -64,6 +64,14 @@
     color: red;
   }
 
+  &__image {
+    border-radius: 8px;
+
+    img {
+      border-radius: 8px;
+    }
+  }
+
   //모달 카테고리 필드
   &__category {
     display: flex;

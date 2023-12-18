@@ -41,6 +41,7 @@ const RecipeItemListComponent = () => {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [categoryId, setCategoryId] = useState(null);
+  const [url, setUrl] = useState();
 
   //레시피 정보 가져오는 핸들러
   const getRecipes = (id) => {
@@ -52,6 +53,7 @@ const RecipeItemListComponent = () => {
         setChangeCategory(res.data.categoryName);
         setIngredients(res.data.Ingredients);
         setCategoryId(res.data.categoryId);
+        setUrl(res.data.url);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -66,7 +68,7 @@ const RecipeItemListComponent = () => {
             className="recipeList__photobox"
             onClick={() => showModal(recipe.id)}
           >
-            <img src="/icon/bread.png" alt="" />
+            <img src={recipe.url} alt="" />
           </div>
           <div className="recipeList__bottom">
             <div className="recipeList__bottom-nameBookmark">
@@ -106,6 +108,7 @@ const RecipeItemListComponent = () => {
           recipeName,
           ingredients,
           categoryId,
+          url,
         }}
       ></RecipeListModalComponent>
     </>
