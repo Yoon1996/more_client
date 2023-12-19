@@ -10,9 +10,9 @@ import "./recipe_list_modal.component.scss";
 import SearchWordComponent from "./search_word.component";
 
 const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
-  const [recipeName, setRecipeName] = useState(recipes.recipeName);
-  const [changeCategory, setChangeCategory] = useState(recipes.changeCategory);
-  const [categoryId, setCategoryId] = useState(recipes.categoryId);
+  const [recipeName, setRecipeName] = useState("");
+  const [changeCategory, setChangeCategory] = useState("");
+  const [categoryId, setCategoryId] = useState(null);
   const [ingredientId, setIngredientId] = useState(null);
   const [nameErrors, setNameErrors] = useState({});
   const [categoryErrors, setCategoryErrors] = useState({});
@@ -31,43 +31,46 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   var numCheck = /\d/;
 
   //레시피 정보 가져오기
+  // useEffect(() => {
+  //   getRecipe(recipes.recipeId)
+  //     .then((res) => {
+  //       console.log("레시피: ", res);
+  //       setRecipeName(res.data.name);
+  //       setChangeCategory(res.data.categoryName);
+  //       const RecipeIngredientId = res.data.Ingredients.map((item) => item.id);
+  //       setIngredientId(RecipeIngredientId);
+  //       setIngredientList(res.data.Ingredients);
+  //       setUrl(res.data.url);
+  //     })
+  //     .catch((err) => {
+  //       console.log("err: ", err);
+  //     });
+  // }, [handleCancel]);
+
   useEffect(() => {
-    getRecipe(recipes.recipeId)
-      .then((res) => {
-        console.log("레시피: ", res);
-        setRecipeName(res.data.name);
-        setChangeCategory(res.data.categoryName);
-        const RecipeIngredientId = res.data.Ingredients.map((item) => item.id);
-        setIngredientId(RecipeIngredientId);
-        setIngredientList(res.data.Ingredients);
-        setUrl(res.data.url);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
-  }, [recipes.recipeId, isModalOpen, handleCancel]);
-  console.log(recipes.url);
+    if (isModalOpen) {
+      setRecipeName(recipes.recipeName || "");
+      setChangeCategory(recipes.changeCategory || "");
+      setCategoryId(recipes.categoryId || null);
+      setUrl(recipes.url || "");
+    }
+  }, [isModalOpen, recipes]);
 
   //파일 등록
   const handleFileChange = (e) => {
     setSelctedFile(e.target.files[0]);
   };
 
-  const uploadImageToS3 = (url, file) => {
-    instance
-      .put(url, file)
-      .then((res) => {
-        // console.log("res: ", res);
-        const urlData = res.config.url;
-        const question = [...urlData].findIndex((data) => data === "?");
-        setSendedUrl([...urlData].splice(0, question).join(""));
-        // console.log("question: ", question);
-        // 스프레드 연산자로 감싸고 물음표값의 인덱스를 찾는다.
-        // splice 로 물음표인덱스부터 url의 전체 길이에서 물음표가 있는 길이까지 자른다.
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
+  const uploadImageToS3 = async (url, file) => {
+    try {
+      const res = await instance.put(url, file);
+      const urlData = res.config.url;
+      const newUrl = new URL(urlData);
+      const unsignedUrl = `${newUrl.origin}${newUrl.pathname}`;
+      setSendedUrl(unsignedUrl);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   };
 
   const uploadFile = async () => {
@@ -286,7 +289,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
           ) : (
             <div className="recipe-list__modal__image">
               <img
-                src={url}
+                src={recipes.url}
                 alt=""
                 style={{ maxWidth: "100%", maxHeight: "400px" }}
               />
@@ -336,7 +339,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
                 ""
               )}
             </div>
-            {ingredientList.map((ingredient, index) => (
+            {recipes.ingredients.map((ingredient, index) => (
               <div
                 key={index}
                 className="recipe-list__modal__ingredient__list recipe-list__modal__size"

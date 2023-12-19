@@ -12,6 +12,7 @@ import "./recipe_item.component.scss";
 import SearchWordComponent from "./search_word.component";
 import userEvent from "@testing-library/user-event";
 import { async } from "rxjs";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const RecipeItemComponent = () => {
   const [recipeName, setRecipeName] = useState("");
@@ -21,12 +22,17 @@ const RecipeItemComponent = () => {
   const [categoryErrors, setCategoryErrors] = useState({});
   const [ingErrors, setIngErrors] = useState({});
   const [selectedFile, setSelctedFile] = useState();
-  const [sendedUrl, setSendedUrl] = useState();
+  const [sendedUrl, setSendedUrl] = useState("");
   const dispatch = useDispatch();
   const instance = axios.create({
     headers: null,
   });
   const fileInput = useRef();
+
+  useEffect(() => {
+    // console.log("selectedFile: ", selectedFile);
+    // console.log("sendedUrl: ", sendedUrl);
+  }, [sendedUrl, selectedFile]);
 
   //정규식
   var numCheck = /\d/;
@@ -47,6 +53,8 @@ const RecipeItemComponent = () => {
     setCategoryErrors(null);
     setIngErrors(null);
     fileInput.current.value = null;
+    setSelctedFile(null);
+    setSendedUrl(null);
   };
 
   //파일 등록
@@ -60,20 +68,18 @@ const RecipeItemComponent = () => {
       const urlData = res.config.url;
       const newUrl = new URL(urlData);
       const unsignedUrl = `${newUrl.origin}${newUrl.pathname}`;
-      setSendedUrl(unsignedUrl);
+      return unsignedUrl;
     } catch (error) {
-      console.log("error: ", error);
+      console.error("Error while uploading image to S3:", error); // 에러 메시지를 콘솔에 출력
     }
   };
-  // console.log(sendedUrl);
 
   const uploadFile = async () => {
     try {
       const result = await sendUrl({ filename: selectedFile.name });
-      // console.log("result: ", result);
       const presignedUrl = result.data;
-      // console.log("presignedUrl: ", presignedUrl);
-      uploadImageToS3(presignedUrl, selectedFile);
+      const lastUrl = await uploadImageToS3(presignedUrl, selectedFile);
+      return lastUrl;
     } catch (err) {
       console.log("err: ", err);
     }
@@ -84,7 +90,6 @@ const RecipeItemComponent = () => {
   useEffect(() => {
     viewCategories()
       .then((res) => {
-        // console.log("category_res: ", res.data);
         setCategoryList(res.data);
       })
       .catch((err) => {
@@ -191,22 +196,16 @@ const RecipeItemComponent = () => {
         !categoryErrors?.category?.select &&
         !ingErrors?.ingredient?.blank
       ) {
-        uploadFile();
-        const recipeParam = {
-          name: recipeName,
-          ingredientList,
-          categoryName: changeCategory,
-          url: sendedUrl,
-        };
         try {
-          console.log("recipeParam.url: ", recipeParam.url);
+          const recipeUrl = await uploadFile();
+          const recipeParam = {
+            name: recipeName,
+            ingredientList,
+            categoryName: changeCategory,
+            url: recipeUrl,
+          };
           const result = await create(recipeParam);
           dispatch(setRecipes(result.data));
-          setIsModalOpen(false);
-          setRecipeName("");
-          setChangeCategory("");
-          fileInput.current.value = null;
-          setIngredientList([{ name: "", ea: "", unit: "" }]);
         } catch (error) {
           if (error.response.data.statusMessage === "ALL_EMPTY") {
           } else if (error.response.data.statusMessage === "DUPLICATED_NAME") {
@@ -221,6 +220,13 @@ const RecipeItemComponent = () => {
             });
           }
         }
+        setIsModalOpen(false);
+        setRecipeName(``);
+        setChangeCategory(``);
+        fileInput.current.value = null;
+        setSendedUrl(null);
+        setSelctedFile(null);
+        setIngredientList([{ name: "", ea: "", unit: "" }]);
       }
     }
   };
@@ -262,6 +268,7 @@ const RecipeItemComponent = () => {
             </div>
           </div>
           <input type="file" ref={fileInput} onChange={handleFileChange} />
+          <button onClick={uploadFile}>dddd</button>
           <div className="modal__category modal__size">
             <div className="modal__category__with-hint">
               <div className="modal__sub-title">카테고리</div>

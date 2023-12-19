@@ -79,4 +79,11 @@
     right: 20px;
     cursor: pointer;
   }
+
+  &__hint {
+    margin-top: 20px;
+    margin-left: 24px;
+    color: var(--more-system-error);
+    font-weight: bold;
+  }
 }

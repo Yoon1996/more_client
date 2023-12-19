@@ -7,10 +7,6 @@ import "./bookmark_component.scss";
 import DropdownComponent from "./dropdown_component";
 
 const BookmarkComponent = ({ type, setType }) => {
-  useEffect(() => {
-    console.log("type: ", type);
-  }, [type]);
-
   const dispatch = useDispatch();
   const [isSwitch, setIsSwitch] = useState(false);
 

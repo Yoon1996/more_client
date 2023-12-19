@@ -5,12 +5,33 @@ import { setRecipes } from "../store/recipe.store";
 import "./recipe_item_list.component.scss";
 import RecipeListModalComponent from "./recipe_list_modal.component";
 import StarButton from "./starButton.component";
+import { async } from "rxjs";
 
 const RecipeItemListComponent = () => {
+  const [recipeName, setRecipeName] = useState("");
+  const [changeCategory, setChangeCategory] = useState("");
+  const [recipeId, setRecipeId] = useState(0);
+  const [ingredients, setIngredients] = useState([]);
+  const [categoryId, setCategoryId] = useState(null);
+  const [url, setUrl] = useState();
   const dispatch = useDispatch();
   const recipies = useSelector((rootState) => rootState.recipe);
 
   useEffect(() => loadRecipeList(), []);
+  useEffect(
+    () => {
+      // console.log("recipeName: ", recipeName);
+      // console.log("changeCategory: ", changeCategory);
+      // console.log("recipeId: ", recipeId);
+      // console.log("ingredients: ", ingredients);
+      // console.log("categoryId: ", categoryId);
+      // console.log("url: ", url);
+    },
+    [recipeName, changeCategory, recipeId],
+    ingredients,
+    categoryId,
+    url
+  );
 
   const loadRecipeList = () => {
     getRecipeList()
@@ -21,8 +42,6 @@ const RecipeItemListComponent = () => {
         console.log(error);
       });
   };
-
-  const [recipeId, setRecipeId] = useState(0);
 
   //모달창 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,29 +54,24 @@ const RecipeItemListComponent = () => {
   // 모달창 닫기
   const handleCancel = () => {
     setIsModalOpen(false);
+    console.log("리스트에서 닫기");
   };
 
-  const [changeCategory, setChangeCategory] = useState("");
-  const [recipeName, setRecipeName] = useState("");
-  const [ingredients, setIngredients] = useState([]);
-  const [categoryId, setCategoryId] = useState(null);
-  const [url, setUrl] = useState();
-
   //레시피 정보 가져오는 핸들러
-  const getRecipes = (id) => {
-    getRecipe(id)
-      .then((res) => {
-        // console.log("res??: ", res.data);
-        setRecipeId(res.data.id);
-        setRecipeName(res.data.name);
-        setChangeCategory(res.data.categoryName);
-        setIngredients(res.data.Ingredients);
-        setCategoryId(res.data.categoryId);
-        setUrl(res.data.url);
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-      });
+  const getRecipes = async (id) => {
+    console.log("id: ", id);
+    try {
+      const res = await getRecipe(id);
+      // console.log("res: ", res);
+      setRecipeId(res.data.id);
+      setRecipeName(res.data.name);
+      setChangeCategory(res.data.categoryName);
+      setIngredients(res.data.Ingredients);
+      setCategoryId(res.data.categoryId);
+      setUrl(res.data.url);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   };
 
   return (
@@ -104,10 +118,10 @@ const RecipeItemListComponent = () => {
         handleCancel={handleCancel}
         recipes={{
           recipeId,
-          changeCategory,
           recipeName,
-          ingredients,
           categoryId,
+          changeCategory,
+          ingredients,
           url,
         }}
       ></RecipeListModalComponent>

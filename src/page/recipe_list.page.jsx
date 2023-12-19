@@ -14,7 +14,7 @@ const RecipeListpage = () => {
   useEffect(() => {
     getRecipeList()
       .then((res) => {
-        console.log("res: ", res);
+        // console.log("res: ", res);
         const current = res.data;
         dispatch(setRecipes(current));
       })

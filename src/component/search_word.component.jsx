@@ -6,7 +6,7 @@ const SearchWordComponent = ({ type, selectMenu, checked, editMode }) => {
   const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
-    console.log("checked: ", checked);
+    // console.log("checked: ", checked);
     viewCategories()
       .then((res) => {
         // console.log("res: ", res.data);

@@ -25,7 +25,7 @@ export const getRecipeList = (filter) => {
 }
 //레시피 검색 목록 가져오기
 export const getSearchRecipeList = (search) => {
-    return axios.get(`${baseUrl}/recipes?search=${search}`)
+    return axios.get(`${baseUrl}/searchRecipes?search=${search}`)
 }
 
 //레시피 필터링
