@@ -2,8 +2,8 @@ import axios from "axios";
 import { env } from "../evnironment/environment"
 
 
-// const baseUrl = `${process.env.REACT_APP_HOST}/category`
-const baseUrl = `${env.hosturl}/category`
+const baseUrl = `${process.env.REACT_APP_HOST}/category`
+// const baseUrl = `${env.hosturl}/category`
 
 //카테고리 생성
 export const categoryCreate = (params) => {

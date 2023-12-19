@@ -2,8 +2,8 @@ import axios from "axios";
 import { env } from "../evnironment/environment"
 
 
-// const baseUrl = `${process.env.REACT_APP_HOST}/category`
-const baseUrl = `${env.hosturl}/bookmark`
+const baseUrl = `${process.env.REACT_APP_HOST}/category`
+// const baseUrl = `${env.hosturl}/bookmark`
 
 //북마크 지정
 export const bookmarkToggle = (params) => {
