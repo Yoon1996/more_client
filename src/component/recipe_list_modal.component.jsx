@@ -30,28 +30,12 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   //정규식
   var numCheck = /\d/;
 
-  //레시피 정보 가져오기
-  // useEffect(() => {
-  //   getRecipe(recipes.recipeId)
-  //     .then((res) => {
-  //       console.log("레시피: ", res);
-  //       setRecipeName(res.data.name);
-  //       setChangeCategory(res.data.categoryName);
-  //       const RecipeIngredientId = res.data.Ingredients.map((item) => item.id);
-  //       setIngredientId(RecipeIngredientId);
-  //       setIngredientList(res.data.Ingredients);
-  //       setUrl(res.data.url);
-  //     })
-  //     .catch((err) => {
-  //       console.log("err: ", err);
-  //     });
-  // }, [handleCancel]);
-
   useEffect(() => {
     if (isModalOpen) {
       setRecipeName(recipes.recipeName || "");
       setChangeCategory(recipes.changeCategory || "");
       setCategoryId(recipes.categoryId || null);
+      setIngredientList(recipes.ingredients);
       setUrl(recipes.url || "");
     }
   }, [isModalOpen, recipes]);
@@ -67,7 +51,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
       const urlData = res.config.url;
       const newUrl = new URL(urlData);
       const unsignedUrl = `${newUrl.origin}${newUrl.pathname}`;
-      setSendedUrl(unsignedUrl);
+      return unsignedUrl;
     } catch (error) {
       console.log("error: ", error);
     }
@@ -76,10 +60,9 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
   const uploadFile = async () => {
     try {
       const result = await sendUrl({ filename: selectedFile.name });
-      // console.log("result: ", result);
       const presignedUrl = result.data;
-      // console.log("presignedUrl: ", presignedUrl);
-      uploadImageToS3(presignedUrl, selectedFile);
+      const lastUrl = uploadImageToS3(presignedUrl, selectedFile);
+      return lastUrl;
     } catch (err) {
       console.log("err: ", err);
     }
@@ -176,17 +159,14 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
     setIsChangeCategory(true);
   };
 
+  //사진변경 모드
+  const [isEditImg, setIsEditImg] = useState(false);
+  const editImg = () => {
+    setIsEditImg(true);
+  };
+
   //저장모드, params 서버에 전달
   const submit = async (id) => {
-    const recipeParam = {
-      recipeId: id,
-      recipeName: recipeName,
-      categoryName: changeCategory,
-      categoryId: recipes.categoryId,
-      ingredientList,
-      url: sendedUrl,
-    };
-
     if (!recipeName && !changeCategory) {
       checkHandler();
     } else if (!recipeName || !changeCategory) {
@@ -198,14 +178,24 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
         !categoryErrors?.category?.select &&
         !ingErrors?.ingredient?.blank
       ) {
-        uploadFile();
         try {
+          const recipeUrl = await uploadFile();
+          const recipeParam = {
+            recipeId: id,
+            recipeName: recipeName,
+            categoryName: changeCategory,
+            categoryId: recipes.categoryId,
+            ingredientList,
+            url: recipeUrl,
+          };
+          console.log("recipeParam: ", recipeParam);
           const result = await editRecipe(id, recipeParam);
           console.log("수정result: ", result);
           dispatch(setRecipes(result.data));
           setIsEditMode(false);
           setIsChangeCategory(false);
-          // handleCancel();
+          setIsEditImg(false);
+          handleCancel();
         } catch (error) {
           console.log("error: ", error);
         }
@@ -222,6 +212,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
     setNameErrors(null);
     setCategoryErrors(null);
     setIngErrors(null);
+    setIsEditImg(false);
   };
 
   const selectMenu = (e) => {
@@ -285,11 +276,20 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
             )}
           </div>
           {isEditMode ? (
-            <input type="file" onChange={handleFileChange} />
+            isEditImg ? (
+              <input type="file" onChange={handleFileChange} />
+            ) : (
+              <button
+                className="recipe-list__modal__edit-img"
+                onClick={editImg}
+              >
+                사진 변경하기
+              </button>
+            )
           ) : (
             <div className="recipe-list__modal__image">
               <img
-                src={recipes.url}
+                src={url}
                 alt=""
                 style={{ maxWidth: "100%", maxHeight: "400px" }}
               />
@@ -339,7 +339,7 @@ const RecipeListModalComponent = ({ isModalOpen, handleCancel, recipes }) => {
                 ""
               )}
             </div>
-            {recipes.ingredients.map((ingredient, index) => (
+            {ingredientList.map((ingredient, index) => (
               <div
                 key={index}
                 className="recipe-list__modal__ingredient__list recipe-list__modal__size"

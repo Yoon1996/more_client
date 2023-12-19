@@ -47,9 +47,6 @@ const RecipeListpage = () => {
               type={switchOn}
             ></BookmarkComponent>
           </div>
-          {/* <div className="recipe_list__filter">
-          <FilterButtonComponent></FilterButtonComponent>
-        </div> */}
           <div className="recipe_list__main-content">
             <div className="recipe_list__list">
               {currentRecipes.length > 0 ? (

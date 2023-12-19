@@ -268,7 +268,6 @@ const RecipeItemComponent = () => {
             </div>
           </div>
           <input type="file" ref={fileInput} onChange={handleFileChange} />
-          <button onClick={uploadFile}>dddd</button>
           <div className="modal__category modal__size">
             <div className="modal__category__with-hint">
               <div className="modal__sub-title">카테고리</div>

@@ -72,6 +72,12 @@
     }
   }
 
+  &__edit-img {
+    border: none;
+    background: var(--more-basic-white);
+    cursor: pointer;
+  }
+
   //모달 카테고리 필드
   &__category {
     display: flex;
