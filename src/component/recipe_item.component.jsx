@@ -32,8 +32,8 @@ const RecipeItemComponent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("selectedFile: ", selectedFile);
-    // console.log("sendedUrl: ", sendedUrl);
+    console.log("selectedFile: ", selectedFile);
+    console.log("sendedUrl: ", sendedUrl);
   }, [sendedUrl, selectedFile]);
 
   //정규식
@@ -67,6 +67,7 @@ const RecipeItemComponent = () => {
   const uploadImageToS3 = async (url, file) => {
     try {
       const res = await instance.put(url, file);
+      console.log("res: ", res);
       const urlData = res.config.url;
       const newUrl = new URL(urlData);
       const unsignedUrl = `${newUrl.origin}${newUrl.pathname}`;
@@ -80,6 +81,7 @@ const RecipeItemComponent = () => {
     try {
       const result = await sendUrl({ filename: selectedFile.name });
       const presignedUrl = result.data;
+      console.log("presignedUrl: ", presignedUrl);
       const lastUrl = await uploadImageToS3(presignedUrl, selectedFile);
       return lastUrl;
     } catch (err) {
