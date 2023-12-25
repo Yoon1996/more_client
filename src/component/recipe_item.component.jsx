@@ -13,6 +13,7 @@ import SearchWordComponent from "./search_word.component";
 import userEvent from "@testing-library/user-event";
 import { async } from "rxjs";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const RecipeItemComponent = () => {
   const [recipeName, setRecipeName] = useState("");
@@ -28,6 +29,7 @@ const RecipeItemComponent = () => {
     headers: null,
   });
   const fileInput = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // console.log("selectedFile: ", selectedFile);
@@ -277,6 +279,28 @@ const RecipeItemComponent = () => {
                 ) : null}
               </div>
             </div>
+            {categoryList.length < 0 ? (
+              <SearchWordComponent
+                editMode={false}
+                categoryList={categoryList}
+                type={"no_close"}
+                selectMenu={selectMenu}
+              ></SearchWordComponent>
+            ) : (
+              <div>
+                <div className="modal__category__notion">
+                  카테고리를 먼저 등록해주세요!
+                </div>
+                <div
+                  className="modal__category__button"
+                  onClick={() => {
+                    navigate("/my-account/category_list_page");
+                  }}
+                >
+                  카테고리 생성하러 가기
+                </div>
+              </div>
+            )}
             <SearchWordComponent
               editMode={false}
               categoryList={categoryList}
