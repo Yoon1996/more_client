@@ -279,7 +279,7 @@ const RecipeItemComponent = () => {
                 ) : null}
               </div>
             </div>
-            {categoryList.length < 0 ? (
+            {categoryList.length !== 0 ? (
               <SearchWordComponent
                 editMode={false}
                 categoryList={categoryList}
@@ -301,12 +301,6 @@ const RecipeItemComponent = () => {
                 </div>
               </div>
             )}
-            <SearchWordComponent
-              editMode={false}
-              categoryList={categoryList}
-              type={"no_close"}
-              selectMenu={selectMenu}
-            ></SearchWordComponent>
           </div>
           <div className="modal__ingredient modal__size">
             <div className="modal__with-hint">
